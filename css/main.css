@@ -18,6 +18,10 @@ button {
   cursor: pointer;
 }
 
+.app-container {
+  padding: 1rem;
+}
+
 .vote-container {
   display: flex;
   flex-direction: row;
@@ -37,4 +41,22 @@ button {
 .vote-container p {
   color: hsl(238deg, 40%, 52%);
   font-weight: 700;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+.user-info .avatar img {
+  width: 2rem;
+  height: 2rem;
+}
+.user-info .user-name {
+  font-weight: 700;
+}
+.user-info .created-at {
+  opacity: 0.7;
 }/*# sourceMappingURL=main.css.map */
