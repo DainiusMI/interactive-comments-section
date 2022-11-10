@@ -1,10 +1,10 @@
 @use "./variables" as *;
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-
+@mixin flex ($direction, $align, $justify) {
+    display: flex;
+    flex-direction: $direction;
+    align-items: $align;
+    justify-content: $justify;
 }
 
 .attribution {
@@ -14,11 +14,10 @@
     }
 }
 
-@mixin flex ($direction, $align, $justify) {
-    display: flex;
-    flex-direction: $direction;
-    align-items: $align;
-    justify-content: $justify;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 button {
@@ -27,16 +26,41 @@ button {
     cursor: pointer;
 }
 
+body {
+    width: 100vw;
+    background-color: $background-color;
+    @include flex(column, center , space-between);
+
+    font-family: 'Rubik', sans-serif;
+    font-size: 16px;
+}
+
 .app-container {
-    padding: 1rem
+    padding: 1rem;
+    background-color: white;
+    width: 90%;
+    margin-top: 2rem;
+    border-radius: .5rem;
+    @include flex(column, flex-start, flex-start);
+    gap: .5rem;
+}
+
+.comment-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem
 }
 
 .vote-container {
     @include flex(row, center, center);
     gap: .5rem;
+    grid-column: 1 / 2;
+    grid-row: 3 / 4;
 
+    width: 90%;
+    padding: .5rem;
+    border-radius: .5rem;
     background-color: $background-color;
-    border-radius: .3rem;
     button {
         img {
             display: block;
@@ -55,6 +79,8 @@ button {
 .user-info {
     @include flex(row, center, flex-start);
     gap: .5rem;
+    grid-column: 1 / 4;
+    grid-row: 1 / 2;
     .avatar {
         img {
             width: 2rem;
@@ -68,13 +94,17 @@ button {
         color:$text-grey;
     }
 }
+
 .comment {
     color:$text-grey;
-    
+    grid-column: 1 / 4;
+    grid-row: 2 / 3;
 }
+
 .button-container {
     @include flex(row, center, flex-end);
     gap: .5rem;
+    grid-column: 2 / -1;
     .action-button {
         @include flex(row, center, center);
         gap: .5rem;
@@ -94,3 +124,4 @@ button {
         }
     }
 }
+
