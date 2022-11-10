@@ -1,5 +1,6 @@
 @use "./variables" as *;
 
+
 @mixin flex ($direction, $align, $justify) {
     display: flex;
     flex-direction: $direction;
@@ -37,14 +38,14 @@ body {
 }
 
 .app-container {
-    @include flex(column, flex-start, flex-start);
-    gap: .5rem;
+    @include flex(column, flex-end, center);
+    gap: 1rem;
 
     width: min(90%, 45rem);
     margin-top: 2rem;
 
 }
-
+.form-container,
 .comment-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -52,9 +53,13 @@ body {
 
     padding: 1rem;
     border-radius: .5rem;
-
+    width: 100%;
     background-color: white;
+}
 
+.reply-container {
+    padding-left: calc(10% - .2rem);
+    border-left: .2rem solid $border-grey;
 }
 
 .vote-container {
@@ -92,12 +97,7 @@ body {
     gap: max(1.5vw, .5rem);
     grid-column: 1 / 4;
     grid-row: 1 / 2;
-    .avatar {
-        img {
-            width: 2rem;
-            height: 2rem;
-        }
-    }
+
     .user-name {
         font-weight: 700;
     }
@@ -105,6 +105,13 @@ body {
         color:$text-grey;
     }
 }
+.avatar {
+    img {
+        width: 2rem;
+        height: 2rem;
+    }
+}
+
 
 .comment {
     color:$text-grey;
@@ -130,17 +137,64 @@ body {
         .delete {
             color: $text-red;
             &:hover {
+                
                 filter: $filter-red-pale;
             }
         }
     }
 }
 
+.form-container {
+
+    .avatar {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+    }
+    .textarea {
+        grid-column: 1 / 4;
+        grid-row: 1 / 2;
+
+        resize: none;
+        
+        border: 2px solid $border-grey;
+        border-radius: .5rem;
+        padding: .5rem 1rem;
+        height: 4rem;
+        color: $text-grey;
+
+        &:focus {
+            outline: none;
+            border: 1px solid $text-blue;
+        }
+
+    }
+    .blue-button {
+        grid-column: 3 / 4;
+        grid-row: 2 / 3;
+
+        background-color: $text-blue;
+    
+        border-radius: .5rem;
+
+        color: white;
+        font-weight: 700;
+        &:hover {
+            background-color: $text-blue-pale;
+        }
+    }
+}
+
+
+
+
+
 @media (min-width:375px) {
     .app-container {
         padding-left: .5rem;
         gap: 1rem;
     }
+
+    // adjust comment container
     .comment-container {
         grid-template-columns: repeat(8, 1fr);
         padding: 1.5rem 1rem;
@@ -149,7 +203,6 @@ body {
             grid-template-columns: 1fr;
             grid-template-rows: repeat(3, 1fr);
 
-
             grid-column: 1 / 2;
             grid-row: 1 / 3;
            
@@ -157,12 +210,10 @@ body {
 
             width: 2.5rem;
             height: 6rem;
-            
         }
         .user-info {
             grid-column: 2 / 6;
             grid-row: 1 / 2;
-
         }
         .comment {
             grid-column: 2 / -1;
@@ -171,6 +222,36 @@ body {
         .button-container {
             grid-column: 6 / 9;
             margin-right: .5rem;
+        }
+    }
+
+    // adjyust reply container
+    .app-container {
+        .reply-container {
+            width: 93%;
+            padding-left: calc(7% - .2rem);
+        }
+    }
+
+    // ajust other forms
+    .app-container {
+        .form-container {
+            grid-template-columns: repeat(14, 1fr);
+            padding: 1.5rem;
+            .avatar {
+                grid-row: 1 / 2;
+            }
+            .textarea {
+                grid-column: 2 / 13;
+                grid-row: 1 / 3;
+                height: 5rem;
+            }
+            .blue-button {
+                grid-column: 13 / 15;
+                grid-row: 1 / 2;
+
+           
+            }
         }
     }
 }
