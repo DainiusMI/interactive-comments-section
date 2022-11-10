@@ -23,3 +23,4 @@ Your users should be able to:
 - A confirmation modal should pop up before a comment or reply is deleted.
 - Adding a new comment or reply uses the `currentUser` object from within the `data.json` file.
 - You can only edit or delete your own comments and replies.
+
