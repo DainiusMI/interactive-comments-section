@@ -43,11 +43,11 @@ button {
             margin: 0 auto;
         }
         &:hover {
-            filter: brightness(0) saturate(100%) invert(29%) sepia(61%) saturate(1027%) hue-rotate(209deg) brightness(100%) contrast(88%);
+            filter: $filter-blue;
         }
     }
     p {
-        color: $text-color;
+        color: $text-blue;
         font-weight: 700;
     }
 }
@@ -65,6 +65,32 @@ button {
         font-weight: 700;
     }
     .created-at {
-        opacity: .7;
+        color:$text-grey;
+    }
+}
+.comment {
+    color:$text-grey;
+    
+}
+.button-container {
+    @include flex(row, center, flex-end);
+    gap: .5rem;
+    .action-button {
+        @include flex(row, center, center);
+        gap: .5rem;
+
+        font-weight: 700;
+        &:not(.delete) {
+            color: $text-blue;
+            &:hover {
+                filter: $filter-blue-pale;
+            }
+        }
+        .delete {
+            color: $text-red;
+            &:hover {
+                filter: $filter-red-pale;
+            }
+        }
     }
 }

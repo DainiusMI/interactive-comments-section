@@ -58,5 +58,37 @@ button {
   font-weight: 700;
 }
 .user-info .created-at {
-  opacity: 0.7;
+  color: hsl(211deg, 10%, 45%);
+}
+
+.comment {
+  color: hsl(211deg, 10%, 45%);
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.button-container .action-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 700;
+}
+.button-container .action-button:not(.delete) {
+  color: hsl(238deg, 40%, 52%);
+}
+.button-container .action-button:not(.delete):hover {
+  filter: invert(79%) sepia(24%) saturate(410%) hue-rotate(201deg) brightness(99%) contrast(88%);
+}
+.button-container .action-button .delete {
+  color: hsl(358deg, 79%, 66%);
+}
+.button-container .action-button .delete:hover {
+  filter: brightness(0) saturate(100%) invert(99%) sepia(37%) saturate(5359%) hue-rotate(289deg) brightness(106%) contrast(102%);
 }/*# sourceMappingURL=main.css.map */

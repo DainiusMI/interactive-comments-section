@@ -1,4 +1,16 @@
 
 $background-color:hsl(228, 33%, 97%);
 
-$text-color:hsl(238, 40%, 52%);
+$text-blue:hsl(238, 40%, 52%);
+$text-blue-pale:hsl(239, 57%, 85%);
+
+$text-red:hsl(358, 79%, 66%);
+$text-red-pale:hsl(357, 100%, 86%);
+
+$text-grey:hsl(211, 10%, 45%);
+
+
+$filter-blue: brightness(0) saturate(100%) invert(29%) sepia(61%) saturate(1027%) hue-rotate(209deg) brightness(100%) contrast(88%);
+$filter-blue-pale: invert(79%) sepia(24%) saturate(410%) hue-rotate(201deg) brightness(99%) contrast(88%);
+
+$filter-red-pale: brightness(0) saturate(100%) invert(99%) sepia(37%) saturate(5359%) hue-rotate(289deg) brightness(106%) contrast(102%);
