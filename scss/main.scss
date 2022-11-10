@@ -1,7 +1,10 @@
-
+@use "./variables" as *;
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
 }
 
 .attribution {
@@ -11,4 +14,36 @@
     }
 }
 
+@mixin flex ($direction, $align, $justify) {
+    display: flex;
+    flex-direction: $direction;
+    align-items: $align;
+    justify-content: $justify;
+}
 
+button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.vote-container {
+    @include flex(row, center, center);
+    gap: .5rem;
+
+    background-color: $background-color;
+    border-radius: .3rem;
+    button {
+        img {
+            display: block;
+            margin: 0 auto;
+        }
+        &:hover {
+            filter: brightness(0) saturate(100%) invert(29%) sepia(61%) saturate(1027%) hue-rotate(209deg) brightness(100%) contrast(88%);
+        }
+    }
+    p {
+        color: $text-color;
+        font-weight: 700;
+    }
+}
