@@ -46,7 +46,7 @@ function renderComments() {
                 }
                 else {
                     string += `
-                        <textarea class="comment">${arg.content}</textarea>
+                        <p class="comment">${arg.content}</p>
                         <div class="button-container">
                     `;
                 }
@@ -82,36 +82,82 @@ function renderComments() {
     appContainer.innerHTML = generatedString;
 }
 
-function renderForm(buttonName, recipient) {
-    return `
+function renderForm(buttonName, recipient, id) {
+    let string = "";
+    string +=`
         <div class="form-container">
             <div class="avatar"><img src="${dataFile.currentUser.image.png}" alt="${dataFile.currentUser.username}"></div>
-            <textarea class="textarea" name="${buttonName}"></textarea>
-            <button class="blue-button" value="${recipient}">${buttonName}</button>
-        </div>
-    `;
+    `
+    if (recipient && id) {
+        string += `
+                <textarea class="textarea ${recipient} ${buttonName}">@${recipient} </textarea>
+                <button class="blue-button" value="${recipient}">${buttonName}</button>
+            </div>
+        `;
+    }
+    else {
+        string += `
+                <textarea class="textarea" name="${buttonName}"></textarea>
+                <button class="blue-button" value="${recipient}">${buttonName}</button>
+            </div>
+        `;
+    }
+
+
+    return string
 }
 
 
-
+//console.log(replyButton)
 
 replyButton.forEach(button => {
     button.addEventListener("click", () => {
         let targetComment = document.getElementById(button.value);
-        console.log(targetComment)
 
-        let commentContent = document.getElementsByClassName("textarea");
-        //console.log(commentContent)
 
-        let commentObj = dataFile.comments.find(comment => comment.id === parseInt(targetComment.id));
-
-        let recipient =  commentObj.user.username;
-
-        targetComment.insertAdjacentHTML("afterend", renderForm("reply"));
+        let rootComment = false;
+        // find the comment
+        let selectedComment = {};
+        dataFile.comments.forEach(comment => {
+            if (comment.id === parseInt(targetComment.id)) {
+                selectedComment = comment;
+                rootComment = true;
+            }
+            else {
+                comment.replies.forEach(reply => {
+                    if (reply.id === parseInt(targetComment.id)) {
+                        selectedComment = reply;
+                    }
+                })
+            }
+        })
         
-        console.log(addressedTo)
+        let recipient =  selectedComment.user.username;
+        targetComment.insertAdjacentHTML("afterend", renderForm("reply", recipient, targetComment.id));
+
+        let replyTextarea = document.getElementsByClassName(recipient);
+        console.log(replyTextarea)
+
     })
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
