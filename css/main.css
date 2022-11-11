@@ -51,6 +51,11 @@ body {
 }
 
 .reply-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
   padding-left: calc(10% - 0.2rem);
   border-left: 0.2rem solid hsl(223deg, 19%, 93%);
 }
@@ -152,13 +157,13 @@ textarea {
   resize: none;
   border: none;
   padding: 0.5rem 1rem;
+  border: 2px solid hsl(223deg, 19%, 93%);
+  border-radius: 0.5rem;
+  color: hsl(211deg, 10%, 45%);
 }
 textarea:focus {
   outline: none;
   border: 1px solid hsl(238deg, 40%, 52%);
-}
-textarea:active {
-  overflow: auto;
 }
 
 .form-container .avatar {
@@ -168,10 +173,7 @@ textarea:active {
 .form-container .textarea {
   grid-column: 1/4;
   grid-row: 1/2;
-  border: 2px solid hsl(223deg, 19%, 93%);
-  border-radius: 0.5rem;
   height: 4rem;
-  color: hsl(211deg, 10%, 45%);
   cursor: pointer;
 }
 .form-container .blue-button {

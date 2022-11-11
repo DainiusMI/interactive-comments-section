@@ -58,6 +58,9 @@ body {
 }
 
 .reply-container {
+    @include flex(column, center, center);
+    gap: 1rem;
+
     padding-left: calc(10% - .2rem);
     border-left: .2rem solid $border-grey;
 }
@@ -158,13 +161,13 @@ textarea {
     border: none;
     padding: .5rem 1rem;
 
+    border: 2px solid $border-grey;
+    border-radius: .5rem;
+    color: $text-grey;
 
     &:focus {
         outline: none;
         border: 1px solid $text-blue;
-    }
-    &:active {
-        overflow: auto;
     }
 
 }
@@ -179,15 +182,9 @@ textarea {
         grid-column: 1 / 4;
         grid-row: 1 / 2;
         
-        border: 2px solid $border-grey;
-        border-radius: .5rem;
-
         height: 4rem;
-        color: $text-grey;
 
         cursor: pointer;
-
-
     }
     .blue-button {
         grid-column: 3 / 4;

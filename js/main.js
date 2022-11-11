@@ -6,13 +6,12 @@ let appContainer = document.getElementById("app-container");
 renderComments();
 appContainer.innerHTML += renderForm("send");
 
-let replyButton = document.querySelectorAll(".reply");
+let replyFormCall = document.querySelectorAll(".reply");
 let editButton = document.querySelectorAll(".edit");
-
+let idArr = [];
 
 function renderComments() {
     let generatedString = "";
-
     dataFile.comments.map(comment => {
         // fucntion that generates string to form comments
             function populateComment(arg) {
@@ -71,7 +70,7 @@ function renderComments() {
         // puts comments into string
         generatedString += populateComment(comment);
         // checks if comment has replies and if so puts them to string
-        if (comment.replies.length) {
+        if (comment.replies.length ) {
             generatedString += `<div class="reply-container">`;
             comment.replies.map(reply => {
                 generatedString += populateComment(reply);
@@ -90,8 +89,8 @@ function renderForm(buttonName, recipient, id) {
     `
     if (recipient && id) {
         string += `
-                <textarea class="textarea ${recipient} ${buttonName}">@${recipient} </textarea>
-                <button class="blue-button" value="${recipient}">${buttonName}</button>
+                <textarea class="textarea" id="reply-${id}">@${recipient} </textarea>
+                <button class="blue-button reply-upload" value="${id}">${buttonName}</button>
             </div>
         `;
     }
@@ -102,26 +101,24 @@ function renderForm(buttonName, recipient, id) {
             </div>
         `;
     }
-
-
     return string
 }
 
 
-//console.log(replyButton)
 
-replyButton.forEach(button => {
+replyFormCall.forEach(button => {
     button.addEventListener("click", () => {
+
         let targetComment = document.getElementById(button.value);
-
-
-        let rootComment = false;
+  
+        let recipient = "";
         // find the comment
         let selectedComment = {};
+
+
         dataFile.comments.forEach(comment => {
             if (comment.id === parseInt(targetComment.id)) {
                 selectedComment = comment;
-                rootComment = true;
             }
             else {
                 comment.replies.forEach(reply => {
@@ -131,16 +128,59 @@ replyButton.forEach(button => {
                 })
             }
         })
-        
-        let recipient =  selectedComment.user.username;
-        targetComment.insertAdjacentHTML("afterend", renderForm("reply", recipient, targetComment.id));
 
-        let replyTextarea = document.getElementsByClassName(recipient);
-        console.log(replyTextarea)
+        
+
+        targetComment.insertAdjacentHTML("afterend", renderForm("reply", selectedComment.user.username, selectedComment.id));
+
+
+  
+
+        let replyUpload = document.querySelectorAll(".reply-upload");
+        replyUpload.forEach(button => {
+            button.addEventListener("click", () => {
+                let replyText = document.getElementById(`reply-${button.value}`);
+                
+
+                function pushComment() {
+                    let result = {};
+                    result.li = 0;
+                    result.content = replyText.value.slice(selectedComment.user.username.length+1);
+                    result.createdAt = "now";
+                    result.score = 0;
+                    result.replyingTo = selectedComment.user.username;
+                    result.user = {};
+                    result.user.image = dataFile.currentUser.image;
+                    result.user.username = dataFile.currentUser.username;
+                    return result
+                }
+
+
+                dataFile.comments.forEach(comment => {
+                    if (comment.id === parseInt(targetComment.id)) {
+                        comment.replies.push(pushComment());
+                   
+                     
+                    }
+                    else {
+                        comment.replies.forEach(reply => {
+                            if (reply.id === parseInt(targetComment.id)) {
+                                comment.replies.push(pushComment());
+                            }
+                        })
+                    }
+                    console.log(dataFile);
+                })
+                renderComments();
+
+
+            
+            })
+        })
+
 
     })
 })
-
 
 
 
