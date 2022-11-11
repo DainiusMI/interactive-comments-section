@@ -114,6 +114,11 @@ body {
   grid-row: 2/3;
 }
 
+span {
+  color: hsl(238deg, 40%, 52%);
+  font-weight: 700;
+}
+
 .button-container {
   display: flex;
   flex-direction: row;
@@ -143,6 +148,19 @@ body {
   filter: brightness(0) saturate(100%) invert(99%) sepia(37%) saturate(5359%) hue-rotate(289deg) brightness(106%) contrast(102%);
 }
 
+textarea {
+  resize: none;
+  border: none;
+  padding: 0.5rem 1rem;
+}
+textarea:focus {
+  outline: none;
+  border: 1px solid hsl(238deg, 40%, 52%);
+}
+textarea:active {
+  overflow: auto;
+}
+
 .form-container .avatar {
   grid-column: 1/2;
   grid-row: 2/3;
@@ -150,16 +168,11 @@ body {
 .form-container .textarea {
   grid-column: 1/4;
   grid-row: 1/2;
-  resize: none;
   border: 2px solid hsl(223deg, 19%, 93%);
   border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
   height: 4rem;
   color: hsl(211deg, 10%, 45%);
-}
-.form-container .textarea:focus {
-  outline: none;
-  border: 1px solid hsl(238deg, 40%, 52%);
+  cursor: pointer;
 }
 .form-container .blue-button {
   grid-column: 3/4;
@@ -168,6 +181,7 @@ body {
   border-radius: 0.5rem;
   color: white;
   font-weight: 700;
+  text-transform: uppercase;
 }
 .form-container .blue-button:hover {
   background-color: hsl(239deg, 57%, 85%);

@@ -123,6 +123,11 @@ body {
     color:$text-grey;
     grid-column: 1 / 4;
     grid-row: 2 / 3;
+
+}
+span {
+    color: $text-blue;
+    font-weight: 700;
 }
 
 .button-container {
@@ -148,6 +153,21 @@ body {
         }
     }
 }
+textarea {
+    resize: none;
+    border: none;
+    padding: .5rem 1rem;
+
+
+    &:focus {
+        outline: none;
+        border: 1px solid $text-blue;
+    }
+    &:active {
+        overflow: auto;
+    }
+
+}
 
 .form-container {
 
@@ -158,19 +178,15 @@ body {
     .textarea {
         grid-column: 1 / 4;
         grid-row: 1 / 2;
-
-        resize: none;
         
         border: 2px solid $border-grey;
         border-radius: .5rem;
-        padding: .5rem 1rem;
+
         height: 4rem;
         color: $text-grey;
 
-        &:focus {
-            outline: none;
-            border: 1px solid $text-blue;
-        }
+        cursor: pointer;
+
 
     }
     .blue-button {
@@ -183,6 +199,7 @@ body {
 
         color: white;
         font-weight: 700;
+        text-transform: uppercase;
         &:hover {
             background-color: $text-blue-pale;
         }
