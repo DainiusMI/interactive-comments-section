@@ -93,6 +93,12 @@ body {
 .user-info .user-name {
   font-weight: 700;
 }
+.user-info .you {
+  font-size: 13px;
+  background-color: hsl(238deg, 40%, 52%);
+  color: white;
+  padding: 0 0.3rem 0.2rem 0.3rem;
+}
 .user-info .created-at {
   color: hsl(211deg, 10%, 45%);
 }
@@ -124,16 +130,16 @@ body {
   gap: 0.5rem;
   font-weight: 700;
 }
-.button-container .action-button:not(.delete) {
+.button-container .action-button:not(.red) {
   color: hsl(238deg, 40%, 52%);
 }
-.button-container .action-button:not(.delete):hover {
+.button-container .action-button:not(.red):hover {
   filter: invert(79%) sepia(24%) saturate(410%) hue-rotate(201deg) brightness(99%) contrast(88%);
 }
-.button-container .action-button .delete {
+.button-container .action-button:not(.blue) {
   color: hsl(358deg, 79%, 66%);
 }
-.button-container .action-button .delete:hover {
+.button-container .action-button:not(.blue):hover {
   filter: brightness(0) saturate(100%) invert(99%) sepia(37%) saturate(5359%) hue-rotate(289deg) brightness(106%) contrast(102%);
 }
 
@@ -186,7 +192,7 @@ body {
     height: 6rem;
   }
   .comment-container .user-info {
-    grid-column: 2/6;
+    grid-column: 2/7;
     grid-row: 1/2;
   }
   .comment-container .comment {
@@ -194,7 +200,7 @@ body {
     grid-row: 2/3;
   }
   .comment-container .button-container {
-    grid-column: 6/9;
+    grid-column: 7/9;
     margin-right: 0.5rem;
   }
   .app-container .reply-container {
