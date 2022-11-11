@@ -29,7 +29,7 @@ body {
   font-size: 16px;
 }
 
-.app-container {
+#app-container {
   display: flex;
   flex-direction: column;
   align-items: flex-end;

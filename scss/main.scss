@@ -37,7 +37,7 @@ body {
     font-size: 16px;
 }
 
-.app-container {
+#app-container {
     @include flex(column, flex-end, center);
     gap: 1rem;
 
