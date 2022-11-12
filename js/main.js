@@ -179,8 +179,8 @@ editFormCall.forEach(button => {
         targetComment.setAttribute("contenteditable", true);
         let updateButton = document.getElementById(`update-${button.value}`);
         updateButton.style.display = "block";
+ 
 
-        
     })
 })
 
