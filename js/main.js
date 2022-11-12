@@ -15,7 +15,7 @@ function renderComments() {
     let generatedString = "";
     dataFile.comments.map(comment => {
         // fucntion that generates string to form comments
-            function populateComment(arg) {
+            function commentFragment(arg) {
                 let string = "";
                 string +=`
                 <div class="comment-container" id="${arg.id}">
@@ -57,7 +57,7 @@ function renderComments() {
                 }
                 else {
                     string += `
-                        <button class="action-button blue reply" value="${arg.id}"><img src="./images/icon-reply.svg" alt="reply-img"><p>Reply</p></button>
+                        <button class="action-button blue reply" name="${arg.user.username}" value="${arg.id}"><img src="./images/icon-reply.svg" alt="reply-img"><p>Reply</p></button>
                     `;
                 }
                 string += `
@@ -68,12 +68,12 @@ function renderComments() {
             }
 
         // puts comments into string
-        generatedString += populateComment(comment);
+        generatedString += commentFragment(comment);
         // checks if comment has replies and if so puts them to string
         if (comment.replies.length ) {
             generatedString += `<div class="reply-container">`;
             comment.replies.map(reply => {
-                generatedString += populateComment(reply);
+                generatedString += commentFragment(reply);
             })
             generatedString += `</div>`;
         }
@@ -81,18 +81,17 @@ function renderComments() {
     appContainer.innerHTML = generatedString;
 
     // place a send form after all comments
-    appContainer.innerHTML += renderForm("send");
+    appContainer.innerHTML += renderForm("send", "", "post");
 }
 
 
 function renderForm(buttonName, recipient, id) {
     let string = "";
-    string +=`
-        <div class="form-container">
-            <div class="avatar"><img src="${dataFile.currentUser.image.png}" alt="${dataFile.currentUser.username}"></div>
-    `
+
     function formFragment(extra) {
         return`
+        <div class="form-container">
+            <div class="avatar"><img src="${dataFile.currentUser.image.png}" alt="${dataFile.currentUser.username}"></div>
             <textarea class="textarea" id="${buttonName}-${id}">${extra}</textarea>
             <button class="blue-button reply-upload" value="${id}">${buttonName}</button>
         </div>
@@ -107,30 +106,30 @@ function renderForm(buttonName, recipient, id) {
     return string
 }
 
+function findCommentORG(target) {
+    let result;
+    dataFile.comments.forEach(comment => {
+        if (comment.id === parseInt(target.id)) {
+            result = comment
+        }
+        else if (comment.replies.length > 0) {
+            comment.replies.forEach(reply => {
+                if (reply.id === parseInt(target.id)) {
+                    result = reply
+                }
+            })
+        }
+    })
+    return result
+}
 
 
 replyFormCall.forEach(button => {
     button.addEventListener("click", () => {
-        console.log(button)
         let targetComment = document.getElementById(button.value);
 
-        // find the comment
-        let selectedComment = {};
-        dataFile.comments.forEach(comment => {
-            if (comment.id === parseInt(targetComment.id)) {
-                selectedComment = comment;
-            }
-            else {
-                comment.replies.forEach(reply => {
-                    if (reply.id === parseInt(targetComment.id)) {
-                        selectedComment = reply;
-                    }
-                })
-            }
-        })
-
-        // generate reply form after selected comment
-        targetComment.insertAdjacentHTML("afterend", renderForm("reply", selectedComment.user.username, selectedComment.id));
+        // generate reply form 
+        targetComment.insertAdjacentHTML("afterend", renderForm("reply", button.name, button.value));
 
         // look for attempts to semd a reply
         let replyUpload = document.querySelectorAll(".reply-upload");
@@ -140,7 +139,7 @@ replyFormCall.forEach(button => {
         
                 function pushComment() {
                     let result = {};
-                    result.li = 0;
+                    result.id = 0;
                     result.content = replyText.value.slice(selectedComment.user.username.length+1);
                     result.createdAt = "now";
                     result.score = 0;
@@ -164,11 +163,9 @@ replyFormCall.forEach(button => {
                         })
                     }
                 })
-                console.log(dataFile)
+                //console.log(dataFile)
                 renderComments();
 
-
-          
             })
         })
     })
