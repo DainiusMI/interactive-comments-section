@@ -95,7 +95,7 @@ function renderForm(buttonName, recipient, id) {
         <div class="form-container">
             <div class="avatar"><img src="${dataFile.currentUser.image.png}" alt="${dataFile.currentUser.username}"></div>
             <textarea class="textarea" id="${buttonName}-${id}">${extra}</textarea>
-            <button class="blue-button reply-upload" value="${id}">${buttonName}</button>
+            <button class="blue-button reply-upload" name="${recipient}" value="${id}">${buttonName}</button>
         </div>
         `   
     }
@@ -106,23 +106,6 @@ function renderForm(buttonName, recipient, id) {
         string += formFragment("");
     }
     return string
-}
-
-function findCommentORG(target) {
-    let result;
-    dataFile.comments.forEach(comment => {
-        if (comment.id === parseInt(target.id)) {
-            result = comment
-        }
-        else if (comment.replies.length > 0) {
-            comment.replies.forEach(reply => {
-                if (reply.id === parseInt(target.id)) {
-                    result = reply
-                }
-            })
-        }
-    })
-    return result
 }
 
 
@@ -145,22 +128,22 @@ replyFormCall.forEach(button => {
                 function pushComment() {
                     let result = {};
                     result.id = 0;
-                    result.content = replyText.value.slice(selectedComment.user.username.length+1);
+                    result.content = replyText.value.replace(/^[@]\w+\s/, "");
                     result.createdAt = "now";
                     result.score = 0;
-                    result.replyingTo = selectedComment.user.username;
+                    result.replyingTo = button.name;
                     result.user = {};
                     result.user.image = dataFile.currentUser.image;
                     result.user.username = dataFile.currentUser.username;
                     return result
                 }
                 dataFile.comments.forEach(comment => {
-                    if (comment.id === parseInt(targetComment.id)) {
+                    if (comment.id === parseInt(button.value)) {
                         comment.replies.push(pushComment());
                     }
                     else {
                         comment.replies.forEach(reply => {
-                            if (reply.id === parseInt(targetComment.id)) {
+                            if (reply.id === parseInt(button.value)) {
                                 comment.replies.push(pushComment());
                             }
                         })
@@ -174,13 +157,34 @@ replyFormCall.forEach(button => {
 
 editFormCall.forEach(button => {
     button.addEventListener("click", () => {
-        console.log(button)
+
         let targetComment = document.getElementById(`comment-${button.value}`);
         targetComment.setAttribute("contenteditable", true);
+        
         let updateButton = document.getElementById(`update-${button.value}`);
+        console.log(button)
+        updateButton.setAttribute(`name`, button.name);
         updateButton.style.display = "block";
  
+        updateButton.addEventListener("click", () => {
+            let commentText = document.getElementById(`comment-${button.value}`).innerText.replace(/^[@]\w+\s/, "");
+            console.log(commentText)
 
+            dataFile.comments.forEach(comment => {
+                if (comment.id === parseInt(button.value)) {
+                    comment.content = commentText;
+                }
+                else {
+                    comment.replies.forEach(reply => {
+                        if (reply.id === parseInt(button.value)) {
+                            reply.content = commentText;
+                        }
+                    })
+                }
+            })
+            renderComments();
+
+        })
     })
 })
 
