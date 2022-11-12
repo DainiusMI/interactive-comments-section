@@ -72,6 +72,7 @@ body {
   padding: 0.5rem;
   border-radius: 0.5rem;
   background-color: hsl(228deg, 33%, 97%);
+  z-index: 1;
 }
 .vote-container button img {
   display: flex;
@@ -179,14 +180,24 @@ textarea:focus {
 .form-container .blue-button {
   grid-column: 3/4;
   grid-row: 2/3;
+}
+
+.blue-button {
   background-color: hsl(238deg, 40%, 52%);
   border-radius: 0.5rem;
   color: white;
   font-weight: 700;
   text-transform: uppercase;
 }
-.form-container .blue-button:hover {
+.blue-button:hover {
   background-color: hsl(239deg, 57%, 85%);
+}
+
+.comment-container .blue-button {
+  display: none;
+  z-index: 2;
+  grid-column: 1/2;
+  grid-row: 3/4;
 }
 
 @media (min-width: 375px) {

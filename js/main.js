@@ -8,7 +8,8 @@ renderComments();
 
 let replyFormCall = document.querySelectorAll(".reply");
 let editFormCall = document.querySelectorAll(".edit");
-console.log(editFormCall)
+
+
 
 
 function renderComments() {
@@ -62,6 +63,7 @@ function renderComments() {
                 }
                 string += `
                     </div>
+                    <button class="blue-button update" value="${arg.id}" id="update-${arg.id}">UPDATE</button>
                 </div>
                 `;
                 return string
@@ -126,15 +128,18 @@ function findCommentORG(target) {
 
 replyFormCall.forEach(button => {
     button.addEventListener("click", () => {
-        let targetComment = document.getElementById(button.value);
 
-        // generate reply form 
+        let targetComment = document.getElementById(button.value);
+        // generate reply form , update simplified the process by putting variables inside the button
         targetComment.insertAdjacentHTML("afterend", renderForm("reply", button.name, button.value));
+
 
         // look for attempts to semd a reply
         let replyUpload = document.querySelectorAll(".reply-upload");
+        
         replyUpload.forEach(button => {
             button.addEventListener("click", () => {
+
                 let replyText = document.getElementById(`reply-${button.value}`);
         
                 function pushComment() {
@@ -149,8 +154,6 @@ replyFormCall.forEach(button => {
                     result.user.username = dataFile.currentUser.username;
                     return result
                 }
-
-
                 dataFile.comments.forEach(comment => {
                     if (comment.id === parseInt(targetComment.id)) {
                         comment.replies.push(pushComment());
@@ -163,11 +166,21 @@ replyFormCall.forEach(button => {
                         })
                     }
                 })
-                //console.log(dataFile)
                 renderComments();
-
             })
         })
+    })
+})
+
+editFormCall.forEach(button => {
+    button.addEventListener("click", () => {
+        console.log(button)
+        let targetComment = document.getElementById(`comment-${button.value}`);
+        targetComment.setAttribute("contenteditable", true);
+        let updateButton = document.getElementById(`update-${button.value}`);
+        updateButton.style.display = "block";
+
+        
     })
 })
 
