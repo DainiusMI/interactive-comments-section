@@ -4,11 +4,12 @@ import dataFile from "./data.json" assert {type: "json"};
 let appContainer = document.getElementById("app-container");
 
 renderComments();
-appContainer.innerHTML += renderForm("send");
+
 
 let replyFormCall = document.querySelectorAll(".reply");
-let editButton = document.querySelectorAll(".edit");
-let idArr = [];
+let editFormCall = document.querySelectorAll(".edit");
+console.log(editFormCall)
+
 
 function renderComments() {
     let generatedString = "";
@@ -16,7 +17,6 @@ function renderComments() {
         // fucntion that generates string to form comments
             function populateComment(arg) {
                 let string = "";
-           
                 string +=`
                 <div class="comment-container" id="${arg.id}">
                     <div class="vote-container">
@@ -39,20 +39,20 @@ function renderComments() {
                 `;
                 if (arg.replyingTo) {
                     string += `
-                        <p class="comment"><span>@${arg.replyingTo} </span>${arg.content}</p>
+                        <div contenteditable="false" class="comment" id="comment-${arg.id}"><span contenteditable="false">@${arg.replyingTo} </span>${arg.content}</div>
                         <div class="button-container">
                     `;
                 }
                 else {
                     string += `
-                        <p class="comment">${arg.content}</p>
+                        <div contenteditable="false" class="comment" id="comment-${arg.id}">${arg.content}</div>
                         <div class="button-container">
                     `;
                 }
                 if (dataFile.currentUser.username === arg.user.username) {
                     string += `
-                        <button class="action-button red delete" value="${arg.id}"><img class="" src="./images/icon-delete.svg" alt="reply-img"><p>Delete</p></button>
-                        <button class="action-button blue edit" value="${arg.id}"><img src="./images/icon-edit.svg" alt="reply-img"><p>Edit</p></button>
+                        <button class="action-button red delete" value="${arg.id}" id="delete-${arg.id}"><img class="" src="./images/icon-delete.svg" alt="reply-img"><p>Delete</p></button>
+                        <button class="action-button blue edit" value="${arg.id}" id="edit-${arg.id}"><img src="./images/icon-edit.svg" alt="reply-img"><p>Edit</p></button>
                     `;
                 }
                 else {
@@ -79,7 +79,11 @@ function renderComments() {
         }
     })
     appContainer.innerHTML = generatedString;
+
+    // place a send form after all comments
+    appContainer.innerHTML += renderForm("send");
 }
+
 
 function renderForm(buttonName, recipient, id) {
     let string = "";
@@ -87,19 +91,18 @@ function renderForm(buttonName, recipient, id) {
         <div class="form-container">
             <div class="avatar"><img src="${dataFile.currentUser.image.png}" alt="${dataFile.currentUser.username}"></div>
     `
+    function formFragment(extra) {
+        return`
+            <textarea class="textarea" id="${buttonName}-${id}">${extra}</textarea>
+            <button class="blue-button reply-upload" value="${id}">${buttonName}</button>
+        </div>
+        `   
+    }
     if (recipient && id) {
-        string += `
-                <textarea class="textarea" id="reply-${id}">@${recipient} </textarea>
-                <button class="blue-button reply-upload" value="${id}">${buttonName}</button>
-            </div>
-        `;
+        string += formFragment(`@${recipient} `);
     }
     else {
-        string += `
-                <textarea class="textarea" name="${buttonName}"></textarea>
-                <button class="blue-button" value="${recipient}">${buttonName}</button>
-            </div>
-        `;
+        string += formFragment("");
     }
     return string
 }
@@ -108,14 +111,11 @@ function renderForm(buttonName, recipient, id) {
 
 replyFormCall.forEach(button => {
     button.addEventListener("click", () => {
-
+        console.log(button)
         let targetComment = document.getElementById(button.value);
-  
-        let recipient = "";
+
         // find the comment
         let selectedComment = {};
-
-
         dataFile.comments.forEach(comment => {
             if (comment.id === parseInt(targetComment.id)) {
                 selectedComment = comment;
@@ -129,19 +129,15 @@ replyFormCall.forEach(button => {
             }
         })
 
-        
-
+        // generate reply form after selected comment
         targetComment.insertAdjacentHTML("afterend", renderForm("reply", selectedComment.user.username, selectedComment.id));
 
-
-  
-
+        // look for attempts to semd a reply
         let replyUpload = document.querySelectorAll(".reply-upload");
         replyUpload.forEach(button => {
             button.addEventListener("click", () => {
                 let replyText = document.getElementById(`reply-${button.value}`);
-                
-
+        
                 function pushComment() {
                     let result = {};
                     result.li = 0;
@@ -159,8 +155,6 @@ replyFormCall.forEach(button => {
                 dataFile.comments.forEach(comment => {
                     if (comment.id === parseInt(targetComment.id)) {
                         comment.replies.push(pushComment());
-                   
-                     
                     }
                     else {
                         comment.replies.forEach(reply => {
@@ -169,16 +163,14 @@ replyFormCall.forEach(button => {
                             }
                         })
                     }
-                    console.log(dataFile);
                 })
+                console.log(dataFile)
                 renderComments();
 
 
-            
+          
             })
         })
-
-
     })
 })
 
