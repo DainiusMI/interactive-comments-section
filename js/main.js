@@ -5,11 +5,12 @@ let appContainer = document.getElementById("app-container");
 
 renderComments();
 
+let sendPostBtn = document.getElementById("send-0");
+let postText = document.getElementById("textarea-0");
 
 let replyFormCall = document.querySelectorAll(".reply");
 let editFormCall = document.querySelectorAll(".edit");
-
-
+let deleteFormCall = document.querySelectorAll(".delete");
 
 
 function renderComments() {
@@ -72,18 +73,19 @@ function renderComments() {
         // puts comments into string
         generatedString += commentFragment(comment);
         // checks if comment has replies and if so puts them to string
-        if (comment.replies.length ) {
-            generatedString += `<div class="reply-container">`;
-            comment.replies.map(reply => {
-                generatedString += commentFragment(reply);
-            })
-            generatedString += `</div>`;
-        }
+        if (comment.replies)
+            if (comment.replies.length > 0) {
+                generatedString += `<div class="reply-container">`;
+                comment.replies.map(reply => {
+                    generatedString += commentFragment(reply);
+                })
+                generatedString += `</div>`;
+            }
     })
     appContainer.innerHTML = generatedString;
 
     // place a send form after all comments
-    appContainer.innerHTML += renderForm("send", "", "post");
+    appContainer.innerHTML += renderForm("send", "", "0");
 }
 
 
@@ -94,8 +96,8 @@ function renderForm(buttonName, recipient, id) {
         return`
         <div class="form-container">
             <div class="avatar"><img src="${dataFile.currentUser.image.png}" alt="${dataFile.currentUser.username}"></div>
-            <textarea class="textarea" id="${buttonName}-${id}">${extra}</textarea>
-            <button class="blue-button reply-upload" name="${recipient}" value="${id}">${buttonName}</button>
+            <textarea class="textarea" id="textarea-${id}">${extra}</textarea>
+            <button class="blue-button ${buttonName}-upload" id="${buttonName}-${id}" name="${recipient}" value="${id}">${buttonName}</button>
         </div>
         `   
     }
@@ -107,6 +109,29 @@ function renderForm(buttonName, recipient, id) {
     }
     return string
 }
+
+
+class CommenteClass {
+    constructor (button, textarea) {
+        this.id = button.value
+        this.content = textarea.value.replace(/^[@]\w+\s/, "");
+        this.createdAt = "now";
+        this.score = 0;
+        this.replyingTo = button.name;
+        this.replies = [];
+        this.user = {};
+        this.user.image = dataFile.currentUser.image;
+        this.user.username = dataFile.currentUser.username;
+    }
+}
+
+
+sendPostBtn.addEventListener("click",() => {
+    let newPost = new CommenteClass(sendPostBtn, postText);
+    delete newPost.replyingTo;
+    dataFile.comments.push(newPost);
+    renderComments();
+})
 
 
 replyFormCall.forEach(button => {
@@ -123,8 +148,9 @@ replyFormCall.forEach(button => {
         replyUpload.forEach(button => {
             button.addEventListener("click", () => {
 
-                let replyText = document.getElementById(`reply-${button.value}`);
-        
+                let replyText = document.getElementById(`textarea-${button.value}`);
+
+                
                 function pushComment() {
                     let result = {};
                     result.id = 0;
@@ -155,15 +181,14 @@ replyFormCall.forEach(button => {
     })
 })
 
+
 editFormCall.forEach(button => {
     button.addEventListener("click", () => {
 
         let targetComment = document.getElementById(`comment-${button.value}`);
         targetComment.setAttribute("contenteditable", true);
-        
+
         let updateButton = document.getElementById(`update-${button.value}`);
-        console.log(button)
-        updateButton.setAttribute(`name`, button.name);
         updateButton.style.display = "block";
  
         updateButton.addEventListener("click", () => {
@@ -183,7 +208,6 @@ editFormCall.forEach(button => {
                 }
             })
             renderComments();
-
         })
     })
 })
