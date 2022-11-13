@@ -149,28 +149,17 @@ replyFormCall.forEach(button => {
             button.addEventListener("click", () => {
 
                 let replyText = document.getElementById(`textarea-${button.value}`);
+                let newReply = new CommenteClass(button, replyText);
+                delete newReply.replies;
 
-                
-                function pushComment() {
-                    let result = {};
-                    result.id = 0;
-                    result.content = replyText.value.replace(/^[@]\w+\s/, "");
-                    result.createdAt = "now";
-                    result.score = 0;
-                    result.replyingTo = button.name;
-                    result.user = {};
-                    result.user.image = dataFile.currentUser.image;
-                    result.user.username = dataFile.currentUser.username;
-                    return result
-                }
                 dataFile.comments.forEach(comment => {
                     if (comment.id === parseInt(button.value)) {
-                        comment.replies.push(pushComment());
+                        comment.replies.push(newReply);
                     }
                     else {
                         comment.replies.forEach(reply => {
                             if (reply.id === parseInt(button.value)) {
-                                comment.replies.push(pushComment());
+                                comment.replies.push(newReply);
                             }
                         })
                     }
