@@ -22,9 +22,9 @@ function mainRender() {
                 string +=`
                 <div class="comment-container" id="${arg.id}">
                     <div class="vote-container">
-                        <button class="upvote" value="${arg.id}" id="upvote-${arg.id}"><img src="./images/icon-plus.svg" alt="+"></button>
+                        <button class="upvote" name="${arg.user.username}" value="${arg.id}" id="upvote-${arg.id}"><img src="./images/icon-plus.svg" alt="+"></button>
                         <p class="vote-score" id="score-${arg.id}">${arg.score}</p>
-                        <button class="downvote" value="${arg.id}" id="downvote-${arg.id}"><img src="./images/icon-minus.svg" alt="-"></button>
+                        <button class="downvote" name="${arg.user.username}" value="${arg.id}" id="downvote-${arg.id}"><img src="./images/icon-minus.svg" alt="-"></button>
                     </div>
                     <div class="user-info">
                         <div class="avatar">
@@ -163,7 +163,6 @@ replyFormCall.forEach(button => {
                         })
                     }
                 })
-
                 mainRender();
             })
         })
@@ -211,47 +210,48 @@ deleteFormCall.forEach(button => {
 let upvoteBtn = document.querySelectorAll(".upvote");
 let downvoteBtn = document.querySelectorAll(".downvote");
 
-class findComment {
-    constructor (id) {
+class VoteClass {
+    constructor (id, author) {
         this.id = id;
-        this.commentOwner = false;
+        this.author = author;
         this.incremented = false;
         this.decremented = false;
     }
-    find(arg) {
-        dataFile.comments.forEach(comment => {
-            if (comment.id === parseInt(this.id)) {
-                comment.score += parseInt(arg);
-            }
-            else {
-                comment.replies.forEach(reply => {
-                    if (reply.id === parseInt(this.id)) {
+    run(arg) {
+        if (this.author !== dataFile.currentUser.username) {
+            if (!this.incremented || !this.decremented) {
+                arg > 0 ? this.incremented = true : this.decremented = true;
+                dataFile.comments.forEach(comment => {
+                    if (comment.id === parseInt(this.id)) {
                         comment.score += parseInt(arg);
                     }
+                    else {
+                        comment.replies.forEach(reply => {
+                            if (reply.id === parseInt(this.id)) {
+                                reply.score += parseInt(arg);
+                            }
+                        })
+                    }
                 })
-            }
-        })
+            }   
+        }
     }
 }
 
 upvoteBtn.forEach(button => {
     button.addEventListener("click", () => {
-        let incrementScore = new findComment(button.value);
-        incrementScore.find("1");
-        console.log("bang")
+        button.incrementScore = new VoteClass(button.value, button.name);
+        button.incrementScore.run("1");
         mainRender();
-
     })
 })
 
 
 downvoteBtn.forEach(button => {
     button.addEventListener("click", () => {
-        let decrimentScore = new findComment(button.value);
-        decrimentScore.find("-1");
-        console.log("bang")
+        button.decrimentScore = new VoteClass(button.value, button.name);
+        button.decrimentScore.run("-1");
         mainRender();
-
     })
 })
 
