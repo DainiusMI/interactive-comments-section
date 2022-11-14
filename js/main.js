@@ -3,9 +3,9 @@ import dataFile from "./data.json" assert {type: "json"};
 
 let appContainer = document.getElementById("app-container");
 
-renderComments();
+mainRender();
 
-let sendPostBtn = document.getElementById("send-0");
+let sendButton = document.getElementById("send-0");
 let postText = document.getElementById("textarea-0");
 
 let replyFormCall = document.querySelectorAll(".reply");
@@ -13,7 +13,7 @@ let editFormCall = document.querySelectorAll(".edit");
 let deleteFormCall = document.querySelectorAll(".delete");
 
 
-function renderComments() {
+function mainRender() {
     let generatedString = "";
     dataFile.comments.map(comment => {
         // fucntion that generates string to form comments
@@ -22,9 +22,9 @@ function renderComments() {
                 string +=`
                 <div class="comment-container" id="${arg.id}">
                     <div class="vote-container">
-                        <button class="upvote" value="${arg.id}"><img src="./images/icon-plus.svg" alt="+"></button>
-                        <p class="vote-score">${arg.score}</p>
-                        <button class="downvote" value="${arg.id}"><img src="./images/icon-minus.svg" alt="-"></button>
+                        <button class="upvote" value="${arg.id}" id="upvote-${arg.id}"><img src="./images/icon-plus.svg" alt="+"></button>
+                        <p class="vote-score" id="score-${arg.id}">${arg.score}</p>
+                        <button class="downvote" value="${arg.id}" id="downvote-${arg.id}"><img src="./images/icon-minus.svg" alt="-"></button>
                     </div>
                     <div class="user-info">
                         <div class="avatar">
@@ -126,11 +126,11 @@ class CommenteClass {
 }
 
 
-sendPostBtn.addEventListener("click",() => {
-    let newPost = new CommenteClass(sendPostBtn, postText);
+sendButton.addEventListener("click",() => {
+    let newPost = new CommenteClass(sendButton, postText);
     delete newPost.replyingTo;
     dataFile.comments.push(newPost);
-    renderComments();
+    mainRender();
 })
 
 
@@ -140,7 +140,6 @@ replyFormCall.forEach(button => {
         let targetComment = document.getElementById(button.value);
         // generate reply form , update simplified the process by putting variables inside the button
         targetComment.insertAdjacentHTML("afterend", renderForm("reply", button.name, button.value));
-
 
         // look for attempts to semd a reply
         let replyUpload = document.querySelectorAll(".reply-upload");
@@ -164,7 +163,8 @@ replyFormCall.forEach(button => {
                         })
                     }
                 })
-                renderComments();
+
+                mainRender();
             })
         })
     })
@@ -182,7 +182,6 @@ editFormCall.forEach(button => {
  
         updateButton.addEventListener("click", () => {
             let commentText = document.getElementById(`comment-${button.value}`).innerText.replace(/^[@]\w+\s/, "");
-            console.log(commentText)
 
             dataFile.comments.forEach(comment => {
                 if (comment.id === parseInt(button.value)) {
@@ -196,15 +195,65 @@ editFormCall.forEach(button => {
                     })
                 }
             })
-            renderComments();
+            mainRender();
         })
     })
 })
 
 
+deleteFormCall.forEach(button => {
+    button.addEventListener("click", () => {
+
+        console.log("del")
+    })
+})
+
+let upvoteBtn = document.querySelectorAll(".upvote");
+let downvoteBtn = document.querySelectorAll(".downvote");
+
+class findComment {
+    constructor (id) {
+        this.id = id;
+        this.commentOwner = false;
+        this.incremented = false;
+        this.decremented = false;
+    }
+    find(arg) {
+        dataFile.comments.forEach(comment => {
+            if (comment.id === parseInt(this.id)) {
+                comment.score += parseInt(arg);
+            }
+            else {
+                comment.replies.forEach(reply => {
+                    if (reply.id === parseInt(this.id)) {
+                        comment.score += parseInt(arg);
+                    }
+                })
+            }
+        })
+    }
+}
+
+upvoteBtn.forEach(button => {
+    button.addEventListener("click", () => {
+        let incrementScore = new findComment(button.value);
+        incrementScore.find("1");
+        console.log("bang")
+        mainRender();
+
+    })
+})
 
 
+downvoteBtn.forEach(button => {
+    button.addEventListener("click", () => {
+        let decrimentScore = new findComment(button.value);
+        decrimentScore.find("-1");
+        console.log("bang")
+        mainRender();
 
+    })
+})
 
 
 
