@@ -6,6 +6,6 @@
     align-self: center;
 ```
 ### DIV CONTAINERS CONTENT CAN BE EDITED:
-```css3
+```html5
     <div contenteditable="true"></div>
 ```

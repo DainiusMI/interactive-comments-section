@@ -1,6 +1,7 @@
 
 import dataFile from "./data.json" assert {type: "json"};
 
+
 let appContainer = document.getElementById("app-container");
 
 mainRender();
@@ -202,10 +203,23 @@ editFormCall.forEach(button => {
 
 deleteFormCall.forEach(button => {
     button.addEventListener("click", () => {
-
-        console.log("del")
+        
+        for (let c in dataFile.comments) {
+            if (dataFile.comments[c].id ===  parseInt(button.value)) {
+                dataFile.comments.splice(c, 1);
+            }
+            else {
+                for (let r in dataFile.comments[c].replies) {
+                    if (dataFile.comments[c].replies[r].id === parseInt(button.value)) {
+                        dataFile.comments[c].replies.splice(r, 1);
+                    }
+                }
+            }
+        }
+        mainRender()
     })
 })
+
 
 let upvoteBtn = document.querySelectorAll(".upvote");
 let downvoteBtn = document.querySelectorAll(".downvote");
