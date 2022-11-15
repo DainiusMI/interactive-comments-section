@@ -16,6 +16,7 @@ let deleteFormCall = document.querySelectorAll(".delete");
 
 function mainRender() {
     let generatedString = "";
+
     dataFile.comments.map(comment => {
         // fucntion that generates string to form comments
             function commentFragment(arg) {

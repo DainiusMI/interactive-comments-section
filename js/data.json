@@ -63,6 +63,35 @@
           }
         }
       ]
+    },
+    {
+      "id": 5,
+      "content": "This comment is just a place holder to make sure the application behaves as intended. First-level comments should be ordered by their score, whereas nested replies are ordered by time added.",
+      "createdAt": "now",
+      "score": 12,
+      "user": {
+        "image": { 
+          "png": "./images/avatars/image_github-avatar.png",
+          "webp": ""
+        },
+        "username": "DainiusMI"
+      },
+      "replies": [
+        {
+          "id": 6,
+          "content": "This first level comment is placed at the end of data file and it's score is set equal to match the highest scored comment. So you can upvote or downvote to see the re-ordering being done.",
+          "createdAt": "2 days ago",
+          "score": 2,
+          "replyingTo": "DainiusMi",
+          "user": {
+            "image": { 
+              "png": "./images/avatars/image_github-avatar.png",
+              "webp": ""
+            },
+            "username": "DainiusMI"
+          }
+        }
+      ]
     }
   ]
 }
