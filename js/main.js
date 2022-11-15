@@ -97,7 +97,7 @@ function renderForm(buttonName, recipient, id) {
         return`
         <div class="form-container">
             <div class="avatar"><img src="${dataFile.currentUser.image.png}" alt="${dataFile.currentUser.username}"></div>
-            <textarea class="textarea" id="textarea-${id}">${extra}</textarea>
+            <div contenteditable="true" class="textarea" id="textarea-${id}"><span contenteditable="false">${extra}</span></div>
             <button class="blue-button ${buttonName}-upload" id="${buttonName}-${id}" name="${recipient}" value="${id}">${buttonName}</button>
         </div>
         `   
@@ -115,7 +115,7 @@ function renderForm(buttonName, recipient, id) {
 class CommenteClass {
     constructor (button, textarea) {
         this.id = button.value
-        this.content = textarea.value.replace(/^[@]\w+\s/, "");
+        this.content = textarea.innerText.replace(/^[@]\w+\s/, "");
         this.createdAt = "now";
         this.score = 0;
         this.replyingTo = button.name;
@@ -137,7 +137,6 @@ sendButton.addEventListener("click",() => {
 
 replyFormCall.forEach(button => {
     button.addEventListener("click", () => {
-
         let targetComment = document.getElementById(button.value);
         // generate reply form , update simplified the process by putting variables inside the button
         targetComment.insertAdjacentHTML("afterend", renderForm("reply", button.name, button.value));
@@ -147,7 +146,7 @@ replyFormCall.forEach(button => {
         
         replyUpload.forEach(button => {
             button.addEventListener("click", () => {
-
+                console.log("tic")
                 let replyText = document.getElementById(`textarea-${button.value}`);
                 let newReply = new CommenteClass(button, replyText);
                 delete newReply.replies;

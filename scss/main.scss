@@ -165,7 +165,7 @@ span {
         }
     }
 }
-textarea {
+.textarea {
     resize: none;
     border: none;
     padding: .5rem 1rem;
@@ -189,9 +189,7 @@ textarea {
     .textarea {
         grid-column: 1 / 4;
         grid-row: 1 / 2;
-        
         height: 4rem;
-
         cursor: pointer;
     }
     .blue-button {

@@ -160,7 +160,7 @@ span {
   filter: brightness(0) saturate(100%) invert(99%) sepia(37%) saturate(5359%) hue-rotate(289deg) brightness(106%) contrast(102%);
 }
 
-textarea {
+.textarea {
   resize: none;
   border: none;
   padding: 0.5rem 1rem;
@@ -168,7 +168,7 @@ textarea {
   border-radius: 0.5rem;
   color: hsl(211deg, 10%, 45%);
 }
-textarea:focus {
+.textarea:focus {
   outline: none;
   border: 1px solid hsl(238deg, 40%, 52%);
 }
