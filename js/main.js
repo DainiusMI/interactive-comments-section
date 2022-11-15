@@ -13,6 +13,37 @@ let replyFormCall = document.querySelectorAll(".reply");
 let editFormCall = document.querySelectorAll(".edit");
 let deleteFormCall = document.querySelectorAll(".delete");
 
+const config = {
+    attributes: true, 
+    childList: true, 
+    subtree:true,
+    characterData: true
+};
+
+const callback = mutations => {  
+    mutations.forEach(mutation => {
+      if (mutation.type === 'childList') {
+        console.log("tracked")
+
+        sendButton = document.getElementById("send-0");
+        postText = document.getElementById("textarea-0");
+        replyFormCall = document.querySelectorAll(".reply");
+        editFormCall = document.querySelectorAll(".edit");
+        deleteFormCall = document.querySelectorAll(".delete");
+        upvoteBtn = document.querySelectorAll(".upvote");
+        downvoteBtn = document.querySelectorAll(".downvote");  
+        sendPost();
+        replyPost();
+        editPost();
+        deletePost();
+        upvote();
+        downvote();
+      }
+    });
+  }
+const observer = new MutationObserver(callback);
+observer.observe(appContainer, config);
+
 
 function compareFunction(a, b) {
     if (parseInt(a) < parseInt(b)) {
@@ -159,14 +190,19 @@ class CommenteClass {
 }
 
 
+
+function sendPost() {
 sendButton.addEventListener("click",() => {
     let newPost = new CommenteClass(sendButton, postText);
     delete newPost.replyingTo;
     dataFile.comments.push(newPost);
     mainRender();
 })
+}
+sendPost();
 
-
+function replyPost() 
+{
 replyFormCall.forEach(button => {
     button.addEventListener("click", () => {
         let targetComment = document.getElementById(button.value);
@@ -200,8 +236,12 @@ replyFormCall.forEach(button => {
         })
     })
 })
+}
+replyPost();
 
 
+
+function editPost() {
 editFormCall.forEach(button => {
     button.addEventListener("click", () => {
 
@@ -230,8 +270,11 @@ editFormCall.forEach(button => {
         })
     })
 })
+}
+editPost();
 
 
+function deletePost() {
 deleteFormCall.forEach(button => {
     button.addEventListener("click", () => {
         
@@ -250,7 +293,8 @@ deleteFormCall.forEach(button => {
         mainRender()
     })
 })
-
+}
+deletePost();
 
 let upvoteBtn = document.querySelectorAll(".upvote");
 let downvoteBtn = document.querySelectorAll(".downvote");
@@ -283,6 +327,9 @@ class VoteClass {
     }
 }
 
+
+
+function upvote() {
 upvoteBtn.forEach(button => {
     button.addEventListener("click", () => {
         button.incrementScore = new VoteClass(button.value, button.name);
@@ -290,8 +337,11 @@ upvoteBtn.forEach(button => {
         mainRender();
     })
 })
+}
+upvote();
 
 
+function downvote() {
 downvoteBtn.forEach(button => {
     button.addEventListener("click", () => {
         button.decrimentScore = new VoteClass(button.value, button.name);
@@ -299,18 +349,8 @@ downvoteBtn.forEach(button => {
         mainRender();
     })
 })
-
-
-
-
-
-
-
-
-
-
-
-
+}
+downvote();
 
 
 
