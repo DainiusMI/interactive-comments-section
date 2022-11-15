@@ -135,8 +135,13 @@ function lastIndex() {
             }
         }
     }
+    
     arr.sort((a, b) => compareFunction(a, b));
-    return arr[0]
+    for (let i = arr.length - 1; i >= 0; i--) {
+        if (i === 0 || parseInt(arr[i]) + 1 !== parseInt(arr[i-1])) {
+            return arr[i]
+        }
+    }
 }
 
 class CommenteClass {
@@ -173,6 +178,7 @@ replyFormCall.forEach(button => {
         
         replyUpload.forEach(button => {
             button.addEventListener("click", () => {
+
                 let replyText = document.getElementById(`textarea-${button.value}`);
                 let newReply = new CommenteClass(button, replyText);
                 delete newReply.replies;
