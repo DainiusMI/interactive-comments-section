@@ -102,6 +102,7 @@ body {
     gap: max(1.5vw, .5rem);
     grid-column: 1 / 4;
     grid-row: 1 / 2;
+    
 
     .user-name {
         font-weight: 700;
@@ -126,9 +127,15 @@ body {
 
 .comment {
     color:$text-grey;
+    
     grid-column: 1 / 4;
     grid-row: 2 / 3;
-
+    &:focus {
+        outline: none;
+        border-radius: .5rem;
+        padding: .5rem 1rem;
+        border: 1px solid $text-blue;
+    }
 }
 span {
     color: $text-blue;
@@ -175,7 +182,6 @@ textarea {
 }
 
 .form-container {
-
     .avatar {
         grid-column: 1 / 2;
         grid-row: 2 / 3;
@@ -217,11 +223,15 @@ textarea {
 
 
 @media (min-width:375px) {
-    .app-container {
+    #app-container {
         padding-left: .5rem;
         gap: 1rem;
     }
-
+    .blue-button {
+        height: 2rem;
+        width: 5rem;
+        
+    }
     // adjust comment container
     .comment-container {
         grid-template-columns: repeat(8, 1fr);
@@ -252,10 +262,15 @@ textarea {
             grid-column: 7 / 9;
             margin-right: .5rem;
         }
+        .update {
+            grid-column: 8 / 9;
+            grid-row: 3 / 4;
+            margin-right: .5rem;
+        }
     }
 
     // adjyust reply container
-    .app-container {
+    #app-container {
         .reply-container {
             width: 93%;
             padding-left: calc(7% - .2rem);
@@ -263,11 +278,12 @@ textarea {
     }
 
     // ajust other forms
-    .app-container {
+    #app-container {
         .form-container {
             grid-template-columns: repeat(14, 1fr);
             padding: 1.5rem;
             .avatar {
+                grid-column: 1 / 2;
                 grid-row: 1 / 2;
             }
             .textarea {
@@ -275,12 +291,12 @@ textarea {
                 grid-row: 1 / 3;
                 height: 5rem;
             }
-            .blue-button {
+            .reply-upload,
+            .send-upload {
                 grid-column: 13 / 15;
                 grid-row: 1 / 2;
-
-           
             }
+
         }
     }
 }
