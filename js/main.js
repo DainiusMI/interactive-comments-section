@@ -14,18 +14,22 @@ let editFormCall = document.querySelectorAll(".edit");
 let deleteFormCall = document.querySelectorAll(".delete");
 
 
+function compareFunction(a, b) {
+    if (parseInt(a) < parseInt(b)) {
+        return +1;
+    }
+    else if (parseInt(a) > parseInt(b)) {
+        return -1;
+    }
+    else return 0;
+}
+
 function mainRender() {
     let generatedString = "";
-    function compareFunction(a, b) {
-        if (parseInt(a.score) < parseInt(b.score)) {
-            return +1;
-        }
-        else if (parseInt(a.score) > parseInt(b.score)) {
-            return -1;
-        }
-        else return 0;
-    }
-    dataFile.comments.sort((a, b) => compareFunction(a, b));
+
+
+    dataFile.comments.sort((a, b) => compareFunction(a.score, b.score));
+
     dataFile.comments.map(comment => {
         // fucntion that generates string to form comments
             function commentFragment(arg) {
@@ -121,10 +125,23 @@ function renderForm(buttonName, recipient, id) {
     return string
 }
 
+function lastIndex() {
+    let arr = [];
+    for (const comment in dataFile.comments) {
+        arr.push(dataFile.comments[comment].id);
+        if (dataFile.comments[comment].replies.length > 0) {
+            for (const reply in dataFile.comments[comment].replies) {
+                arr.push(dataFile.comments[comment].replies[reply].id);
+            }
+        }
+    }
+    arr.sort((a, b) => compareFunction(a, b));
+    return arr[0]
+}
 
 class CommenteClass {
     constructor (button, textarea) {
-        this.id = button.value
+        this.id = lastIndex() + 1
         this.content = textarea.innerText.replace(/^[@]\w+\s/, "");
         this.createdAt = "now";
         this.score = 0;
@@ -156,7 +173,6 @@ replyFormCall.forEach(button => {
         
         replyUpload.forEach(button => {
             button.addEventListener("click", () => {
-                console.log("tic")
                 let replyText = document.getElementById(`textarea-${button.value}`);
                 let newReply = new CommenteClass(button, replyText);
                 delete newReply.replies;
