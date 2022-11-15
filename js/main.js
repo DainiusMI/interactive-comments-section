@@ -16,7 +16,16 @@ let deleteFormCall = document.querySelectorAll(".delete");
 
 function mainRender() {
     let generatedString = "";
-
+    function compareFunction(a, b) {
+        if (parseInt(a.score) < parseInt(b.score)) {
+            return +1;
+        }
+        else if (parseInt(a.score) > parseInt(b.score)) {
+            return -1;
+        }
+        else return 0;
+    }
+    dataFile.comments.sort((a, b) => compareFunction(a, b));
     dataFile.comments.map(comment => {
         // fucntion that generates string to form comments
             function commentFragment(arg) {
