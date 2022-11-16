@@ -6,22 +6,7 @@ let appContainer = document.getElementById("app-container");
 
 mainRender();
 
-let sendButton = document.getElementById("send-0");
-let postText = document.getElementById("textarea-0");
-
-let replyFormCall = document.querySelectorAll(".reply");
-let editFormCall = document.querySelectorAll(".edit");
-let deleteFormCall = document.querySelectorAll(".delete");
-
-
 const observer = new MutationObserver(entire => {
-    sendButton = document.getElementById("send-0");
-    postText = document.getElementById("textarea-0");
-    replyFormCall = document.querySelectorAll(".reply");
-    editFormCall = document.querySelectorAll(".edit");
-    deleteFormCall = document.querySelectorAll(".delete");
-    upvoteBtn = document.querySelectorAll(".upvote");
-    downvoteBtn = document.querySelectorAll(".downvote");  
     sendPost();
     replyPost();
     editPost();
@@ -122,6 +107,7 @@ function mainRender() {
 }
 
 
+
 function renderForm(buttonName, recipient, id) {
     let string = "";
 
@@ -142,6 +128,8 @@ function renderForm(buttonName, recipient, id) {
     }
     return string
 }
+
+
 
 function lastIndex() {
     let arr = [];
@@ -179,6 +167,9 @@ class CommenteClass {
 
 
 function sendPost() {
+    let sendButton = document.getElementById("send-0");
+    let postText = document.getElementById("textarea-0");
+
 sendButton.addEventListener("click",() => {
     let newPost = new CommenteClass(sendButton, postText);
     delete newPost.replyingTo;
@@ -188,8 +179,11 @@ sendButton.addEventListener("click",() => {
 }
 sendPost();
 
+
+
 function replyPost() {
-  
+    let replyFormCall = document.querySelectorAll(".reply");
+
 replyFormCall.forEach(button => {
     button.addEventListener("click", () => {
         let targetComment = document.getElementById(button.value);
@@ -229,6 +223,8 @@ replyPost();
 
 
 function editPost() {
+    let editFormCall = document.querySelectorAll(".edit");
+
 editFormCall.forEach(button => {
     button.addEventListener("click", () => {
 
@@ -261,7 +257,10 @@ editFormCall.forEach(button => {
 editPost();
 
 
+
 function deletePost() {
+    let deleteFormCall = document.querySelectorAll(".delete");
+
 deleteFormCall.forEach(button => {
     button.addEventListener("click", () => {
         
@@ -283,8 +282,7 @@ deleteFormCall.forEach(button => {
 }
 deletePost();
 
-let upvoteBtn = document.querySelectorAll(".upvote");
-let downvoteBtn = document.querySelectorAll(".downvote");
+
 
 class VoteClass {
     constructor (id, author) {
@@ -317,6 +315,8 @@ class VoteClass {
 
 
 function upvote() {
+    let upvoteBtn = document.querySelectorAll(".upvote");
+
 upvoteBtn.forEach(button => {
     button.addEventListener("click", () => {
         button.incrementScore = new VoteClass(button.value, button.name);
@@ -328,7 +328,10 @@ upvoteBtn.forEach(button => {
 upvote();
 
 
+
 function downvote() {
+    let downvoteBtn = document.querySelectorAll(".downvote");
+
 downvoteBtn.forEach(button => {
     button.addEventListener("click", () => {
         button.decrimentScore = new VoteClass(button.value, button.name);
