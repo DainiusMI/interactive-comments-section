@@ -17,15 +17,7 @@ const observer = new MutationObserver(entire => {
 observer.observe(appContainer, {childList:true});
 
 
-function compareFunction(a, b) {
-    if (parseInt(a) < parseInt(b)) {
-        return +1;
-    }
-    else if (parseInt(a) > parseInt(b)) {
-        return -1;
-    }
-    else return 0;
-}
+
 
 function mainRender() {
     let generatedString = "";
@@ -115,18 +107,32 @@ function renderForm(buttonName, recipient, id) {
         return`
         <div class="form-container">
             <div class="avatar"><img src="${dataFile.currentUser.image.png}" alt="${dataFile.currentUser.username}"></div>
-            <div contenteditable="true" class="textarea" id="textarea-${id}"><span contenteditable="false">${extra}</span></div>
+            <div contenteditable="true" class="textarea" id="textarea-${id}">${extra} </div>
             <button class="blue-button ${buttonName}-upload" id="${buttonName}-${id}" name="${recipient}" value="${id}">${buttonName}</button>
         </div>
         `   
     }
     if (recipient && id) {
-        string += formFragment(`@${recipient} `);
+        string += formFragment(`
+        <span contenteditable="false">@${recipient} </span>
+        `);
     }
     else {
         string += formFragment("");
     }
     return string
+}
+
+
+
+function compareFunction(a, b) {
+    if (parseInt(a) < parseInt(b)) {
+        return +1;
+    }
+    else if (parseInt(a) > parseInt(b)) {
+        return -1;
+    }
+    else return 0;
 }
 
 
@@ -141,7 +147,7 @@ function lastIndex() {
             }
         }
     }
-    
+
     arr.sort((a, b) => compareFunction(a, b));
     for (let i = arr.length - 1; i >= 0; i--) {
         if (i === 0 || parseInt(arr[i]) + 1 !== parseInt(arr[i-1])) {
@@ -150,10 +156,12 @@ function lastIndex() {
     }
 }
 
+
+
 class CommenteClass {
     constructor (button, textarea) {
         this.id = lastIndex() + 1
-        this.content = textarea.innerText.replace(/^[@]\w+\s/, "");
+        this.content = textarea.innerText.replace(/^[@]\w+/, "");
         this.createdAt = "now";
         this.score = 0;
         this.replyingTo = button.name;
@@ -283,56 +291,6 @@ function deletePost() {
 deletePost();
 
 
-    
-
-
-class VoteClass {
-    constructor (id, author) {
-        this.id = id;
-        this.author = author;
-        this.incremented = false;
-        this.decremented = false;
-    }
-    vote (arg) {
-        // check if it is not current users comment
-        if (this.author !== dataFile.currentUser.username) { 
-
-            dataFile.comments.forEach(comment => {
-                if (comment.id === parseInt(this.id)) {
-                    comment.score += parseInt(arg);
-                }
-                else {
-                    comment.replies.forEach(reply => {
-                        if (reply.id === parseInt(this.id)) {
-                            reply.score += parseInt(arg);
-                        }
-                    })
-                }
-            })
-        }
-    }
-    run(arg) {
-        if (this.author !== dataFile.currentUser.username) { 
-            if (!this.incremented || !this.decremented) {
-                arg > 0 ? this.incremented = true : this.decremented = true;
-                dataFile.comments.forEach(comment => {
-                    if (comment.id === parseInt(this.id)) {
-                        comment.score += parseInt(arg);
-                    }
-                    else {
-                        comment.replies.forEach(reply => {
-                            if (reply.id === parseInt(this.id)) {
-                                reply.score += parseInt(arg);
-                            }
-                        })
-                    }
-                })
-            }   
-        }
-    }
-}
-
-
 
 function voteFragment(arg) {
     return {
@@ -341,16 +299,10 @@ function voteFragment(arg) {
         decremented: false
     }
 }
-dataFile.currentUser.voted = [
-    {
-        commentID: 0,
-        incremented: false,
-        decremented: false
-    }
-];
+dataFile.currentUser.voted = [];
 
 
-function container(id, action, increment, decrement) {
+function voting(id, action, increment, decrement) {
 
     let currentUserVotes = dataFile.currentUser.voted;
 
@@ -391,7 +343,7 @@ function upvote() {
             let author = button.name;
 
             if (author !== dataFile.currentUser.username) {
-                container(commentID, "incremented", true, false);
+                voting(commentID, "incremented", true, false);
                 mainRender();
             }
         })
@@ -410,7 +362,7 @@ function downvote() {
             let author = button.name;
 
             if (author !== dataFile.currentUser.username) {
-                container(commentID, "decremented", false, true);
+                voting(commentID, "decremented", false, true);
                 mainRender();
             }
         })
