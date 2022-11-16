@@ -365,15 +365,15 @@ function container(id, action, increment, decrement) {
         }
     }
     function updateScore(arg) {
-        action === "incremented" ? arg = + 1 : arg = -1;
+        action === "incremented" ? arg = "+1" : arg = "-1";
         dataFile.comments.forEach(comment => {
             if (comment.id === id) {
-                comment.score += arg;
+                comment.score += parseInt(arg);
             }
             else {
                 comment.replies.forEach(reply => {
                     if (reply.id === id) {
-                        reply.score += arg;
+                        reply.score += parseInt(arg);
                     }
                 })
             }
@@ -410,7 +410,7 @@ function downvote() {
             let author = button.name;
 
             if (author !== dataFile.currentUser.username) {
-                container(commentID, "decrimented", false, true);
+                container(commentID, "decremented", false, true);
                 mainRender();
             }
         })
