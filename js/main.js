@@ -170,12 +170,12 @@ function sendPost() {
     let sendButton = document.getElementById("send-0");
     let postText = document.getElementById("textarea-0");
 
-sendButton.addEventListener("click",() => {
-    let newPost = new CommenteClass(sendButton, postText);
-    delete newPost.replyingTo;
-    dataFile.comments.push(newPost);
-    mainRender();
-})
+    sendButton.addEventListener("click",() => {
+        let newPost = new CommenteClass(sendButton, postText);
+        delete newPost.replyingTo;
+        dataFile.comments.push(newPost);
+        mainRender();
+    })
 }
 sendPost();
 
@@ -184,39 +184,39 @@ sendPost();
 function replyPost() {
     let replyFormCall = document.querySelectorAll(".reply");
 
-replyFormCall.forEach(button => {
-    button.addEventListener("click", () => {
-        let targetComment = document.getElementById(button.value);
-        // generate reply form , update simplified the process by putting variables inside the button
-        targetComment.insertAdjacentHTML("afterend", renderForm("reply", button.name, button.value));
+    replyFormCall.forEach(button => {
+        button.addEventListener("click", () => {
+            let targetComment = document.getElementById(button.value);
+            // generate reply form , update simplified the process by putting variables inside the button
+            targetComment.insertAdjacentHTML("afterend", renderForm("reply", button.name, button.value));
     
-        // look for attempts to semd a reply
-        let replyUpload = document.querySelectorAll(".reply-upload");
+           // look for attempts to semd a reply
+            let replyUpload = document.querySelectorAll(".reply-upload");
+            
+            replyUpload.forEach(button => {
+                button.addEventListener("click", () => {
         
-        replyUpload.forEach(button => {
-            button.addEventListener("click", () => {
-    
-                let replyText = document.getElementById(`textarea-${button.value}`);
-                let newReply = new CommenteClass(button, replyText);
-                delete newReply.replies;
-    
-                dataFile.comments.forEach(comment => {
-                    if (comment.id === parseInt(button.value)) {
-                        comment.replies.push(newReply);
-                    }
-                    else {
-                        comment.replies.forEach(reply => {
-                            if (reply.id === parseInt(button.value)) {
-                                comment.replies.push(newReply);
-                            }
-                        })
-                    }
+                    let replyText = document.getElementById(`textarea-${button.value}`);
+                    let newReply = new CommenteClass(button, replyText);
+                    delete newReply.replies;
+        
+                    dataFile.comments.forEach(comment => {
+                        if (comment.id === parseInt(button.value)) {
+                            comment.replies.push(newReply);
+                        }
+                        else {
+                            comment.replies.forEach(reply => {
+                                if (reply.id === parseInt(button.value)) {
+                                    comment.replies.push(newReply);
+                                }
+                            })
+                        }
+                    })
+                    mainRender();
                 })
-                mainRender();
             })
         })
     })
-})
 }
 replyPost();
 
@@ -225,34 +225,34 @@ replyPost();
 function editPost() {
     let editFormCall = document.querySelectorAll(".edit");
 
-editFormCall.forEach(button => {
-    button.addEventListener("click", () => {
+    editFormCall.forEach(button => {
+        button.addEventListener("click", () => {
 
-        let targetComment = document.getElementById(`comment-${button.value}`);
-        targetComment.setAttribute("contenteditable", true);
+            let targetComment = document.getElementById(`comment-${button.value}`);
+            targetComment.setAttribute("contenteditable", true);
 
-        let updateButton = document.getElementById(`update-${button.value}`);
-        updateButton.style.display = "block";
- 
-        updateButton.addEventListener("click", () => {
-            let commentText = document.getElementById(`comment-${button.value}`).innerText.replace(/^[@]\w+\s/, "");
+            let updateButton = document.getElementById(`update-${button.value}`);
+            updateButton.style.display = "block";
+    
+            updateButton.addEventListener("click", () => {
+                let commentText = document.getElementById(`comment-${button.value}`).innerText.replace(/^[@]\w+\s/, "");
 
-            dataFile.comments.forEach(comment => {
-                if (comment.id === parseInt(button.value)) {
-                    comment.content = commentText;
-                }
-                else {
-                    comment.replies.forEach(reply => {
-                        if (reply.id === parseInt(button.value)) {
-                            reply.content = commentText;
-                        }
-                    })
-                }
+                dataFile.comments.forEach(comment => {
+                    if (comment.id === parseInt(button.value)) {
+                        comment.content = commentText;
+                    }
+                    else {
+                        comment.replies.forEach(reply => {
+                            if (reply.id === parseInt(button.value)) {
+                                reply.content = commentText;
+                            }
+                        })
+                    }
+                })
+                mainRender();
             })
-            mainRender();
         })
     })
-})
 }
 editPost();
 
@@ -261,27 +261,29 @@ editPost();
 function deletePost() {
     let deleteFormCall = document.querySelectorAll(".delete");
 
-deleteFormCall.forEach(button => {
-    button.addEventListener("click", () => {
-        
-        for (let c in dataFile.comments) {
-            if (dataFile.comments[c].id ===  parseInt(button.value)) {
-                dataFile.comments.splice(c, 1);
-            }
-            else {
-                for (let r in dataFile.comments[c].replies) {
-                    if (dataFile.comments[c].replies[r].id === parseInt(button.value)) {
-                        dataFile.comments[c].replies.splice(r, 1);
+    deleteFormCall.forEach(button => {
+        button.addEventListener("click", () => {
+            
+            for (let c in dataFile.comments) {
+                if (dataFile.comments[c].id ===  parseInt(button.value)) {
+                    dataFile.comments.splice(c, 1);
+                }
+                else {
+                    for (let r in dataFile.comments[c].replies) {
+                        if (dataFile.comments[c].replies[r].id === parseInt(button.value)) {
+                            dataFile.comments[c].replies.splice(r, 1);
+                        }
                     }
                 }
             }
-        }
-        mainRender()
+            mainRender()
+        })
     })
-})
 }
 deletePost();
 
+
+    
 
 
 class VoteClass {
@@ -291,8 +293,26 @@ class VoteClass {
         this.incremented = false;
         this.decremented = false;
     }
+    vote (arg) {
+        // check if it is not current users comment
+        if (this.author !== dataFile.currentUser.username) { 
+
+            dataFile.comments.forEach(comment => {
+                if (comment.id === parseInt(this.id)) {
+                    comment.score += parseInt(arg);
+                }
+                else {
+                    comment.replies.forEach(reply => {
+                        if (reply.id === parseInt(this.id)) {
+                            reply.score += parseInt(arg);
+                        }
+                    })
+                }
+            })
+        }
+    }
     run(arg) {
-        if (this.author !== dataFile.currentUser.username) {
+        if (this.author !== dataFile.currentUser.username) { 
             if (!this.incremented || !this.decremented) {
                 arg > 0 ? this.incremented = true : this.decremented = true;
                 dataFile.comments.forEach(comment => {
@@ -314,16 +334,68 @@ class VoteClass {
 
 
 
+function voteFragment(arg) {
+    return {
+        commentID: parseInt(arg),
+        incremented: false,
+        decremented: false
+    }
+}
+dataFile.currentUser.voted = [
+    {
+        commentID: 0,
+        incremented: false,
+        decremented: false
+    }
+];
+
+
+function container(id, action, increment, decrement) {
+
+    let currentUserVotes = dataFile.currentUser.voted;
+
+    if (!currentUserVotes.find(vote => vote.commentID === id)) {
+        currentUserVotes.push(voteFragment(id))
+    }
+    for (let i in currentUserVotes) {
+        if (currentUserVotes[i].commentID === id && !currentUserVotes[i][action]) {
+            currentUserVotes[i].incremented = increment;
+            currentUserVotes[i].decremented = decrement;
+            updateScore();
+        }
+    }
+    function updateScore(arg) {
+        action === "incremented" ? arg = + 1 : arg = -1;
+        dataFile.comments.forEach(comment => {
+            if (comment.id === id) {
+                comment.score += arg;
+            }
+            else {
+                comment.replies.forEach(reply => {
+                    if (reply.id === id) {
+                        reply.score += arg;
+                    }
+                })
+            }
+        })
+    }
+}
+
+
 function upvote() {
     let upvoteBtn = document.querySelectorAll(".upvote");
 
-upvoteBtn.forEach(button => {
-    button.addEventListener("click", () => {
-        button.incrementScore = new VoteClass(button.value, button.name);
-        button.incrementScore.run("1");
-        mainRender();
+    upvoteBtn.forEach(button => {
+        button.addEventListener("click", () => {
+            let commentID = parseInt(button.value);
+            let author = button.name;
+
+            if (author !== dataFile.currentUser.username) {
+                container(commentID, "incremented", true, false);
+                mainRender();
+            }
+        })
     })
-})
 }
 upvote();
 
@@ -332,13 +404,17 @@ upvote();
 function downvote() {
     let downvoteBtn = document.querySelectorAll(".downvote");
 
-downvoteBtn.forEach(button => {
-    button.addEventListener("click", () => {
-        button.decrimentScore = new VoteClass(button.value, button.name);
-        button.decrimentScore.run("-1");
-        mainRender();
+    downvoteBtn.forEach(button => {
+        button.addEventListener("click", () => {
+            let commentID = parseInt(button.value);
+            let author = button.name;
+
+            if (author !== dataFile.currentUser.username) {
+                container(commentID, "decrimented", false, true);
+                mainRender();
+            }
+        })
     })
-})
 }
 downvote();
 
