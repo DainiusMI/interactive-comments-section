@@ -13,36 +13,23 @@ let replyFormCall = document.querySelectorAll(".reply");
 let editFormCall = document.querySelectorAll(".edit");
 let deleteFormCall = document.querySelectorAll(".delete");
 
-const config = {
-    attributes: true, 
-    childList: true, 
-    subtree:true,
-    characterData: true
-};
 
-const callback = mutations => {  
-    mutations.forEach(mutation => {
-      if (mutation.type === 'childList') {
-        console.log("tracked")
-
-        sendButton = document.getElementById("send-0");
-        postText = document.getElementById("textarea-0");
-        replyFormCall = document.querySelectorAll(".reply");
-        editFormCall = document.querySelectorAll(".edit");
-        deleteFormCall = document.querySelectorAll(".delete");
-        upvoteBtn = document.querySelectorAll(".upvote");
-        downvoteBtn = document.querySelectorAll(".downvote");  
-        sendPost();
-        replyPost();
-        editPost();
-        deletePost();
-        upvote();
-        downvote();
-      }
-    });
-  }
-const observer = new MutationObserver(callback);
-observer.observe(appContainer, config);
+const observer = new MutationObserver(entire => {
+    sendButton = document.getElementById("send-0");
+    postText = document.getElementById("textarea-0");
+    replyFormCall = document.querySelectorAll(".reply");
+    editFormCall = document.querySelectorAll(".edit");
+    deleteFormCall = document.querySelectorAll(".delete");
+    upvoteBtn = document.querySelectorAll(".upvote");
+    downvoteBtn = document.querySelectorAll(".downvote");  
+    sendPost();
+    replyPost();
+    editPost();
+    deletePost();
+    upvote();
+    downvote();
+});
+observer.observe(appContainer, {childList:true});
 
 
 function compareFunction(a, b) {
@@ -201,24 +188,24 @@ sendButton.addEventListener("click",() => {
 }
 sendPost();
 
-function replyPost() 
-{
+function replyPost() {
+  
 replyFormCall.forEach(button => {
     button.addEventListener("click", () => {
         let targetComment = document.getElementById(button.value);
         // generate reply form , update simplified the process by putting variables inside the button
         targetComment.insertAdjacentHTML("afterend", renderForm("reply", button.name, button.value));
-
+    
         // look for attempts to semd a reply
         let replyUpload = document.querySelectorAll(".reply-upload");
         
         replyUpload.forEach(button => {
             button.addEventListener("click", () => {
-
+    
                 let replyText = document.getElementById(`textarea-${button.value}`);
                 let newReply = new CommenteClass(button, replyText);
                 delete newReply.replies;
-
+    
                 dataFile.comments.forEach(comment => {
                     if (comment.id === parseInt(button.value)) {
                         comment.replies.push(newReply);
@@ -353,13 +340,3 @@ downvoteBtn.forEach(button => {
 downvote();
 
 
-
-let textareas = document.querySelectorAll("textarea");
-
-textareas.forEach(textarea => {
-    textarea.style.height = textarea.scrollHeight + 5 + "px";
-    textarea.addEventListener("input", () => {
-        textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight + 5 + "px";
-    })
-});
