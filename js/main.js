@@ -126,7 +126,7 @@ function renderForm(buttonName, recipient, id) {
 function renderModal(button) {
     let string = "";
     string += `
-    <div class="modal-main" id="delete-modal">
+    <div class="modal-main">
         <div class="modal-container">
             <h3>Delete comment</h3>
             <p>Are you sure you want to delete this comment? This will remove the comment and can't be undone.</p>
@@ -290,10 +290,8 @@ function delModalCall() {
 
             appContainer.innerHTML += renderModal(button);
 
-            let modal = document.getElementById("delete-modal");
             let cancelModal = document.getElementById("cancel-modal");
             cancelModal.addEventListener("click", () => {
-                modal.outerHTML = "";
                 mainRender();
             })
 

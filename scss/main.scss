@@ -28,9 +28,10 @@ button {
 }
 
 body {
-    @include flex(column, center , space-between);
+    @include flex(column, center , flex-start);
 
     width: 100vw;
+    width: 100%;
     background-color: $background-color;
 
     font-family: 'Rubik', sans-serif;
@@ -240,9 +241,9 @@ span {
     gap: 1rem;
     padding: 2rem;
     border-radius: .5rem;
-    width: 90%;
-
     background-color: white;
+
+    width: 90%;
 
     .modal-buttons {
         width: 100%;        
@@ -345,6 +346,14 @@ span {
             .send-upload {
                 grid-column: 13 / 15;
                 grid-row: 1 / 2;
+            }
+
+        }
+    }
+    #app-container {
+        .modal-main {
+            .modal-container {
+                width: min(90%, 25rem); 
             }
 
         }
