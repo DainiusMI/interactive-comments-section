@@ -294,6 +294,7 @@ function delModalCall() {
             let cancelModal = document.getElementById("cancel-modal");
             cancelModal.addEventListener("click", () => {
                 modal.outerHTML = "";
+                mainRender();
             })
 
             let deleteBtn = document.getElementById(`del-btn-${button.value}`);
