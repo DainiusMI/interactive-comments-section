@@ -4,13 +4,13 @@ import dataFile from "./data.json" assert {type: "json"};
 
 let appContainer = document.getElementById("app-container");
 
-//mainRender();
+mainRender();
 
 const observer = new MutationObserver(entire => {
     sendPost();
     replyPost();
     editPost();
-    deletePost();
+    delModalCall();
     upvote();
     downvote();
 });
@@ -123,6 +123,22 @@ function renderForm(buttonName, recipient, id) {
     return string
 }
 
+function renderModal(button) {
+    let string = "";
+    string += `
+    <div class="modal-main" id="delete-modal">
+        <div class="modal-container">
+            <h3>Delete comment</h3>
+            <p>Are you sure you want to delete this comment? This will remove the comment and can't be undone.</p>
+            <div class="modal-buttons" id="modal-buttons">
+                <button id="cancel-modal">NO, CANCEL</button>
+                <button class="red" value="${button.value}" id="del-btn-${button.value}">YES, DELETE</button>
+            </div>
+        </div>
+    </div>
+    `;
+    return string
+}
 
 
 function compareFunction(a, b) {
@@ -266,29 +282,40 @@ editPost();
 
 
 
-function deletePost() {
-    let deleteFormCall = document.querySelectorAll(".delete");
+function delModalCall() {
+    let delModalCall = document.querySelectorAll(".delete");
 
-    deleteFormCall.forEach(button => {
+    delModalCall.forEach(button => {
         button.addEventListener("click", () => {
-            
-            for (let c in dataFile.comments) {
-                if (dataFile.comments[c].id ===  parseInt(button.value)) {
-                    dataFile.comments.splice(c, 1);
-                }
-                else {
-                    for (let r in dataFile.comments[c].replies) {
-                        if (dataFile.comments[c].replies[r].id === parseInt(button.value)) {
-                            dataFile.comments[c].replies.splice(r, 1);
+
+            appContainer.innerHTML += renderModal(button);
+
+            let modal = document.getElementById("delete-modal");
+            let cancelModal = document.getElementById("cancel-modal");
+            cancelModal.addEventListener("click", () => {
+                modal.outerHTML = "";
+            })
+
+            let deleteBtn = document.getElementById(`del-btn-${button.value}`);
+            deleteBtn.addEventListener("click", () => {
+                for (let c in dataFile.comments) {
+                    if (dataFile.comments[c].id ===  parseInt(button.value)) {
+                        dataFile.comments.splice(c, 1);
+                    }
+                    else {
+                        for (let r in dataFile.comments[c].replies) {
+                            if (dataFile.comments[c].replies[r].id === parseInt(button.value)) {
+                                dataFile.comments[c].replies.splice(r, 1);
+                            }
                         }
                     }
                 }
-            }
-            mainRender()
+                mainRender()
+            })
         })
     })
 }
-deletePost();
+delModalCall();
 
 
 
