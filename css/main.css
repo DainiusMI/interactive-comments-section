@@ -37,6 +37,7 @@ body {
   gap: 1rem;
   width: min(90%, 45rem);
   margin-top: 2rem;
+  position: relative;
 }
 
 .form-container,
@@ -204,6 +205,42 @@ span {
   z-index: 2;
   grid-column: 1/2;
   grid-row: 3/4;
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  background-color: white;
+}
+.modal-container .modal-buttons {
+  width: 100%;
+}
+.modal-container .modal-buttons button {
+  width: calc(50% - 0.4rem);
+  height: 3rem;
+  border-radius: 0.5rem;
+  color: #fff;
+  font-weight: 700;
+}
+.modal-container .modal-buttons button:first-of-type {
+  background-color: hsl(211deg, 10%, 45%);
+  float: left;
+}
+.modal-container .modal-buttons button:first-of-type:hover {
+  background-color: hsl(223deg, 19%, 93%);
+}
+.modal-container .modal-buttons button:last-of-type {
+  background-color: hsl(358deg, 79%, 66%);
+  float: right;
+}
+.modal-container .modal-buttons button:last-of-type:hover {
+  background-color: hsl(357deg, 100%, 86%);
 }
 
 @media (min-width: 375px) {

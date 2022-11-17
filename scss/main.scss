@@ -44,6 +44,7 @@ body {
     width: min(90%, 45rem);
     margin-top: 2rem;
 
+    position: relative;
 }
 .form-container,
 .comment-container {
@@ -218,6 +219,43 @@ span {
     }
 }
 
+.modal-container {
+    @include flex(column, flex-start, center);
+    gap: 1rem;
+    padding: 2rem;
+    border-radius: .5rem;
+    width: 100%;
+
+    background-color: white;
+
+    .modal-buttons {
+        width: 100%;        
+     
+
+        
+        button {  
+            width: calc(50% - .4rem);
+            height: 3rem;
+            border-radius: .5rem;
+            color: #fff;
+            font-weight: 700;
+            &:first-of-type {
+                background-color: $text-grey;
+                float: left;
+                &:hover {
+                    background-color: $border-grey;
+                }
+            }
+            &:last-of-type {
+                background-color: $text-red;
+                float: right;
+                &:hover {
+                    background-color: $text-red-pale;
+                }
+            }
+        }
+    }
+}
 
 
 @media (min-width:375px) {

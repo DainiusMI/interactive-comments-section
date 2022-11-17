@@ -4,7 +4,7 @@ import dataFile from "./data.json" assert {type: "json"};
 
 let appContainer = document.getElementById("app-container");
 
-mainRender();
+//mainRender();
 
 const observer = new MutationObserver(entire => {
     sendPost();
