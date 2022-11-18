@@ -48,7 +48,6 @@ let appContainer = document.getElementById("app-container");
 mainRender();
 
 const observer = new MutationObserver(mutation => {
-    console.log(mutation)
     sendPost();
     replyPost();
     editPost();
@@ -139,6 +138,9 @@ function mainRender() {
 
     let generatedString = "";
     dataFile.comments.sort((a, b) => compareFunction(a.score, b.score));
+    for (let comment in dataFile.comments) {
+        dataFile.comments[comment].replies.sort((a, b) => compareFunction(b.createdAt, a.createdAt));
+    }
     localStorage.setItem("storedData", JSON.stringify(dataFile));
     dataFile.comments.map(comment => {
         // fucntion that generates string to form comments

@@ -61,6 +61,20 @@
             },
             "username": "juliusomo"
           }
+        },
+        {
+          "id": 7,
+          "content": "This secondary comment is placed at the end of replies array, it's date is set so sorting secondary comments by date would place it at the begining.",
+          "createdAt": "2 week ago",
+          "score": 4,
+          "replyingTo": "maxblagun",
+          "user": {
+            "image": { 
+              "png": "./images/avatars/image_github-avatar.png",
+              "webp": ""
+            },
+            "username": "DainiusMI"
+          }
         }
       ]
     },
