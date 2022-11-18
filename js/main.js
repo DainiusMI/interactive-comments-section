@@ -1,12 +1,54 @@
 
-import dataFile from "./data.json" assert {type: "json"};
+import data from "./data.json" assert {type: "json"};
+
+//localStorage.clear()
+
+
+if (!localStorage.getItem("storedData")) {
+    console.log("not found")
+    localStorage.setItem("storedData", JSON.stringify(data));
+}
+let dataFile = JSON.parse(localStorage.getItem("storedData"));
+
+
+// change createdAt to timestamp
+dataFile.comments.map(comment => {
+
+    function datestamp(arg) {
+        if (typeof arg.createdAt !== "number") {
+            let createdAtArr = arg.createdAt.split(" ");
+            let currentDate = new Date();
+            if (/month/.test(createdAtArr[1]))  {
+                arg.createdAt = currentDate.setMonth(currentDate.getMonth() - parseInt(createdAtArr[0]));
+            }
+            else if (/week/.test(createdAtArr[1]))  {
+                arg.createdAt = currentDate.setDate(currentDate.getDate() - (parseInt(createdAtArr[0]) * 7));
+            }
+            else if (/day/.test(createdAtArr[1]))  {
+                arg.createdAt = currentDate.setDate(currentDate.getDate() - parseInt(createdAtArr[0]));
+            }
+        }
+
+    }
+
+    datestamp(comment);
+    if (comment.replies.length > 0) {
+        comment.replies.map(reply =>  {
+            datestamp(reply);
+        })
+    }
+})
+
 
 
 let appContainer = document.getElementById("app-container");
 
+
+
 mainRender();
 
-const observer = new MutationObserver(entire => {
+const observer = new MutationObserver(mutation => {
+    console.log(mutation)
     sendPost();
     replyPost();
     editPost();
@@ -18,79 +60,89 @@ observer.observe(appContainer, {childList:true});
 
 
 
-dataFile.comments.map(comment => {
-
-    function datestamp(arg) {
-        let createdAtArr = arg.createdAt.split(" ");
-        let currentDate = new Date();
-        if (/month/.test(createdAtArr[1]))  {
-            arg.createdAt = currentDate.setMonth(currentDate.getMonth() - parseInt(createdAtArr[0]));
-        }
-        else if (/week/.test(createdAtArr[1]))  {
-            arg.createdAt = currentDate.setDate(currentDate.getDate() - (parseInt(createdAtArr[0]) * 7));
-        }
-        else if (/day/.test(createdAtArr[1]))  {
-            arg.createdAt = currentDate.setDate(currentDate.getDate() - parseInt(createdAtArr[0]));
-        }
-    }
-    datestamp(comment);
-    if (comment.replies.length > 0) {
-        comment.replies.map(reply =>  {
-            datestamp(reply);
-        })
-    }
-})
-
-
-
-mainRender()
-
-
-
 // instead of changing the object itself simply render out the result into DOM element
-// other wise sorting secondary comments out by date will be harder
-function reassignDate(arg) {
+// other wise sorting secondary comments out by date will be harder 
+function dateFromTimestamp(arg) {
     let currentDate = new Date();
     let createdAt = new Date(arg.createdAt);
-
     let yearDiff = currentDate.getFullYear() - createdAt.getFullYear();
     let monthDiff = currentDate.getMonth() - createdAt.getMonth();
     let dayDiff = currentDate.getDate() - createdAt.getDate();
-       
-    function run(value, string) {
-        if (value === dayDiff && dayDiff > 6) {
-            value = (dayDiff / 7).toFixed(0);
-            string = "week"
+    let hourDiff = currentDate.getHours() - createdAt.getHours();
+    let minuteDiff = currentDate.getMinutes() - createdAt.getMinutes();
+    let result = "";
+
+    if (yearDiff > 0) {
+        result = `${yearDiff} year`;
+        if (yearDiff > 1) {
+            result += `s`;
         }
-        if (value > 0) {
-            arg.createdAt = `${value} ${string}`;
-            if (value > 1) {
-                arg.createdAt += `s`;
+        result += ` ago`;
+    }
+    else if (monthDiff > 0) {
+        result = `${monthDiff} month`;
+        if (monthDiff > 1) {
+            result += `s`;
+        }
+        result += ` ago`;
+    }
+    else if (dayDiff > 0) {
+        if (dayDiff > 6) {
+            let weekDiff = (dayDiff / 7).toFixed(0);
+            result = `${weekDiff} week`;
+            if (weekDiff > 1) {
+                result += `s`;
             }
-            arg.createdAt += ` ago`;
+            result += ` ago`;
+        }
+        else {
+            result = `${dayDiff} day`;
+            if (dayDiff > 1) {
+                result += `s`;
+            }
+            result += ` ago`;
         }
     }
-    
-    run(yearDiff, "year");
-    run(monthDiff, "month");
-    run(dayDiff, "day");    
+    else if (hourDiff > 0) {
+        result = `${hourDiff} hour`;
+        if (hourDiff > 1) {
+            result += `s`;
+        }
+        result += ` ago`;
+    }
+    else if (minuteDiff > 0) {
+        result = `${minuteDiff} minute`;
+        if (minuteDiff > 1) {
+            result += `s`;
+        }
+        result += ` ago`;
+    }
+    else result = `now`;
+
+    return result
 }
 
-reassignDate(dataFile.comments[2])
-mainRender()
+
+
+function compareFunction(a, b) {
+    if (parseInt(a) < parseInt(b)) {
+        return +1;
+    }
+    else if (parseInt(a) > parseInt(b)) {
+        return -1;
+    }
+    else return 0;
+}
+
 
 function mainRender() {
+
     let generatedString = "";
-
-
     dataFile.comments.sort((a, b) => compareFunction(a.score, b.score));
-
+    localStorage.setItem("storedData", JSON.stringify(dataFile));
     dataFile.comments.map(comment => {
         // fucntion that generates string to form comments
             function commentFragment(arg) {
-
-
-
                 let string = "";
                 string +=`
                 <div class="comment-container" id="${arg.id}">
@@ -109,7 +161,7 @@ function mainRender() {
                     string += `<div class="you">you</div>`
                 }
                 string += `
-                        <div class="created-at">${arg.createdAt}</div>
+                        <div class="created-at">${dateFromTimestamp(arg)}</div>
                     </div>
                 `;
                 if (arg.replyingTo) {
@@ -204,15 +256,6 @@ function renderModal(button) {
 }
 
 
-function compareFunction(a, b) {
-    if (parseInt(a) < parseInt(b)) {
-        return +1;
-    }
-    else if (parseInt(a) > parseInt(b)) {
-        return -1;
-    }
-    else return 0;
-}
 
 
 
