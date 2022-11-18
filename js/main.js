@@ -19,6 +19,46 @@ observer.observe(appContainer, {childList:true});
 
 
 
+let dataArr = dataFile.comments[1].createdAt.split(" ");
+let regexMonth =  new RegExp('day')
+
+console.log(dataArr[1].match("day"))
+
+console.log(/day/.test(dataArr[1]))
+
+
+dataFile.comments.map(comment => {
+
+    function reAssign(arg) {
+        let createdAtArr = arg.createdAt.split(" ");
+        let currentDate = new Date();
+        if (/month/.test(createdAtArr[1]))  {
+            arg.createdAt = currentDate.setMonth(currentDate.getMonth() - parseInt(createdAtArr[0]));
+        }
+        else if (/week/.test(createdAtArr[1]))  {
+            arg.createdAt = currentDate.setDate(currentDate.getDate() - (parseInt(createdAtArr[0]) * 7));
+        }
+        else if (/day/.test(createdAtArr[1]))  {
+            arg.createdAt = currentDate.setDate(currentDate.getDate() - parseInt(createdAtArr[0]));
+        }
+    }
+    reAssign(comment);
+    if (comment.replies.length > 0) {
+        comment.replies.map(reply =>  {
+            reAssign(reply);
+        })
+    }
+
+})
+
+    mainRender()
+
+
+
+
+
+
+
 function mainRender() {
     let generatedString = "";
 
@@ -178,7 +218,7 @@ class CommenteClass {
     constructor (button, textarea) {
         this.id = lastIndex() + 1
         this.content = textarea.innerText.replace(/^[@]\w+/, "");
-        this.createdAt = "now";
+        this.createdAt = Date.now();
         this.score = 0;
         this.replyingTo = button.name;
         this.replies = [];

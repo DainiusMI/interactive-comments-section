@@ -67,7 +67,7 @@
     {
       "id": 5,
       "content": "This comment is just a place holder to make sure the application behaves as intended. First-level comments should be ordered by their score, whereas nested replies are ordered by time added.",
-      "createdAt": "now",
+      "createdAt": "2 days ago",
       "score": 12,
       "user": {
         "image": { 
