@@ -1,4 +1,4 @@
-## INTERACTIVE COMMETNS SECTION:
+## INTERACTIVE COMMENTS SECTION:
 This is a challenge from [Frontend Mentor](https://www.frontendmentor.io)
 
 ### DESIGN:
