@@ -18,18 +18,9 @@ observer.observe(appContainer, {childList:true});
 
 
 
-
-let dataArr = dataFile.comments[1].createdAt.split(" ");
-let regexMonth =  new RegExp('day')
-
-console.log(dataArr[1].match("day"))
-
-console.log(/day/.test(dataArr[1]))
-
-
 dataFile.comments.map(comment => {
 
-    function reAssign(arg) {
+    function datestamp(arg) {
         let createdAtArr = arg.createdAt.split(" ");
         let currentDate = new Date();
         if (/month/.test(createdAtArr[1]))  {
@@ -42,22 +33,51 @@ dataFile.comments.map(comment => {
             arg.createdAt = currentDate.setDate(currentDate.getDate() - parseInt(createdAtArr[0]));
         }
     }
-    reAssign(comment);
+    datestamp(comment);
     if (comment.replies.length > 0) {
         comment.replies.map(reply =>  {
-            reAssign(reply);
+            datestamp(reply);
         })
     }
-
 })
 
-    mainRender()
+
+
+mainRender()
 
 
 
+// instead of changing the object itself simply render out the result into DOM element
+// other wise sorting secondary comments out by date will be harder
+function reassignDate(arg) {
+    let currentDate = new Date();
+    let createdAt = new Date(arg.createdAt);
 
+    let yearDiff = currentDate.getFullYear() - createdAt.getFullYear();
+    let monthDiff = currentDate.getMonth() - createdAt.getMonth();
+    let dayDiff = currentDate.getDate() - createdAt.getDate();
+       
+    function run(value, string) {
+        if (value === dayDiff && dayDiff > 6) {
+            value = (dayDiff / 7).toFixed(0);
+            string = "week"
+        }
+        if (value > 0) {
+            arg.createdAt = `${value} ${string}`;
+            if (value > 1) {
+                arg.createdAt += `s`;
+            }
+            arg.createdAt += ` ago`;
+        }
+    }
+    
+    run(yearDiff, "year");
+    run(monthDiff, "month");
+    run(dayDiff, "day");    
+}
 
-
+reassignDate(dataFile.comments[2])
+mainRender()
 
 function mainRender() {
     let generatedString = "";
@@ -68,6 +88,9 @@ function mainRender() {
     dataFile.comments.map(comment => {
         // fucntion that generates string to form comments
             function commentFragment(arg) {
+
+
+
                 let string = "";
                 string +=`
                 <div class="comment-container" id="${arg.id}">
