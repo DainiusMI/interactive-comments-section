@@ -129,7 +129,7 @@ body {
 
 .comment {
     color:$text-grey;
-    
+    line-height: 1.4rem;    
     grid-column: 1 / 4;
     grid-row: 2 / 3;
     &:focus {
@@ -239,12 +239,14 @@ span {
 .modal-container {
     @include flex(column, flex-start, center);
     gap: 1rem;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: .5rem;
     background-color: white;
 
-    width: 90%;
-
+    max-width: 20rem;
+    p {
+        line-height: 1.4rem;
+    }
     .modal-buttons {
         width: 100%;        
         button {  
@@ -353,7 +355,7 @@ span {
     #app-container {
         .modal-main {
             .modal-container {
-                width: min(90%, 25rem); 
+                //width: min(90%, 25rem); 
             }
 
         }

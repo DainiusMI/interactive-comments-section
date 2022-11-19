@@ -118,6 +118,7 @@ body {
 
 .comment {
   color: hsl(211deg, 10%, 45%);
+  line-height: 1.4rem;
   grid-column: 1/4;
   grid-row: 2/3;
 }
@@ -227,10 +228,13 @@ span {
   align-items: flex-start;
   justify-content: center;
   gap: 1rem;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 0.5rem;
   background-color: white;
-  width: 90%;
+  max-width: 20rem;
+}
+.modal-container p {
+  line-height: 1.4rem;
 }
 .modal-container .modal-buttons {
   width: 100%;
@@ -317,8 +321,5 @@ span {
 #app-container .form-container .send-upload {
     grid-column: 13/15;
     grid-row: 1/2;
-  }
-  #app-container .modal-main .modal-container {
-    width: min(90%, 25rem);
   }
 }/*# sourceMappingURL=main.css.map */
